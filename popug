@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ru-RU" class="no-js">
+<head><meta charset="UTF-8"><script>if(navigator.userAgent.match(/MSIE|Internet Explorer/i)||navigator.userAgent.match(/Trident\/7\..*?rv:11/i)){var href=document.location.href;if(!href.match(/[?&]nowprocket/)){if(href.indexOf("?")==-1){if(href.indexOf("#")==-1){document.location.href=href+"?nowprocket=1"}else{document.location.href=href.replace("#","?nowprocket=1#")}}else{if(href.indexOf("#")==-1){document.location.href=href+"&nowprocket=1"}else{document.location.href=href.replace("#","&nowprocket=1#")}}}}</script><script>class RocketLazyLoadScripts{constructor(e){this.triggerEvents=e,this.eventOptions={passive:!0},this.userEventListener=this.triggerListener.bind(this),this.delayedScripts={normal:[],async:[],defer:[]},this.allJQueries=[]}_addUserInteractionListener(e){this.triggerEvents.forEach((t=>window.addEventListener(t,e.userEventListener,e.eventOptions)))}_removeUserInteractionListener(e){this.triggerEvents.forEach((t=>window.removeEventListener(t,e.userEventListener,e.eventOptions)))}triggerListener(){this._removeUserInteractionListener(this),"loading"===document.readyState?document.addEventListener("DOMContentLoaded",this._loadEverythingNow.bind(this)):this._loadEverythingNow()}async _loadEverythingNow(){this._delayEventListeners(),this._delayJQueryReady(this),this._handleDocumentWrite(),this._registerAllDelayedScripts(),this._preloadAllScripts(),await this._loadScriptsFromList(this.delayedScripts.normal),await this._loadScriptsFromList(this.delayedScripts.defer),await this._loadScriptsFromList(this.delayedScripts.async),await this._triggerDOMContentLoaded(),await this._triggerWindowLoad(),window.dispatchEvent(new Event("rocket-allScriptsLoaded"))}_registerAllDelayedScripts(){document.querySelectorAll("script[type=rocketlazyloadscript]").forEach((e=>{e.hasAttribute("src")?e.hasAttribute("async")&&!1!==e.async?this.delayedScripts.async.push(e):e.hasAttribute("defer")&&!1!==e.defer||"module"===e.getAttribute("data-rocket-type")?this.delayedScripts.defer.push(e):this.delayedScripts.normal.push(e):this.delayedScripts.normal.push(e)}))}async _transformScript(e){return await this._requestAnimFrame(),new Promise((t=>{const n=document.createElement("script");let r;[...e.attributes].forEach((e=>{let t=e.nodeName;"type"!==t&&("data-rocket-type"===t&&(t="type",r=e.nodeValue),n.setAttribute(t,e.nodeValue))})),e.hasAttribute("src")?(n.addEventListener("load",t),n.addEventListener("error",t)):(n.text=e.text,t()),e.parentNode.replaceChild(n,e)}))}async _loadScriptsFromList(e){const t=e.shift();return t?(await this._transformScript(t),this._loadScriptsFromList(e)):Promise.resolve()}_preloadAllScripts(){var e=document.createDocumentFragment();[...this.delayedScripts.normal,...this.delayedScripts.defer,...this.delayedScripts.async].forEach((t=>{const n=t.getAttribute("src");if(n){const t=document.createElement("link");t.href=n,t.rel="preload",t.as="script",e.appendChild(t)}})),document.head.appendChild(e)}_delayEventListeners(){let e={};function t(t,n){!function(t){function n(n){return e[t].eventsToRewrite.indexOf(n)>=0?"rocket-"+n:n}e[t]||(e[t]={originalFunctions:{add:t.addEventListener,remove:t.removeEventListener},eventsToRewrite:[]},t.addEventListener=function(){arguments[0]=n(arguments[0]),e[t].originalFunctions.add.apply(t,arguments)},t.removeEventListener=function(){arguments[0]=n(arguments[0]),e[t].originalFunctions.remove.apply(t,arguments)})}(t),e[t].eventsToRewrite.push(n)}function n(e,t){let n=e[t];Object.defineProperty(e,t,{get:()=>n||function(){},set(r){e["rocket"+t]=n=r}})}t(document,"DOMContentLoaded"),t(window,"DOMContentLoaded"),t(window,"load"),t(window,"pageshow"),t(document,"readystatechange"),n(document,"onreadystatechange"),n(window,"onload"),n(window,"onpageshow")}_delayJQueryReady(e){let t=window.jQuery;Object.defineProperty(window,"jQuery",{get:()=>t,set(n){if(n&&n.fn&&!e.allJQueries.includes(n)){n.fn.ready=n.fn.init.prototype.ready=function(t){e.domReadyFired?t.bind(document)(n):document.addEventListener("rocket-DOMContentLoaded",(()=>t.bind(document)(n)))};const t=n.fn.on;n.fn.on=n.fn.init.prototype.on=function(){if(this[0]===window){function e(e){return e.split(" ").map((e=>"load"===e||0===e.indexOf("load.")?"rocket-jquery-load":e)).join(" ")}"string"==typeof arguments[0]||arguments[0]instanceof String?arguments[0]=e(arguments[0]):"object"==typeof arguments[0]&&Object.keys(arguments[0]).forEach((t=>{delete Object.assign(arguments[0],{[e(t)]:arguments[0][t]})[t]}))}return t.apply(this,arguments),this},e.allJQueries.push(n)}t=n}})}async _triggerDOMContentLoaded(){this.domReadyFired=!0,await this._requestAnimFrame(),document.dispatchEvent(new Event("rocket-DOMContentLoaded")),await this._requestAnimFrame(),window.dispatchEvent(new Event("rocket-DOMContentLoaded")),await this._requestAnimFrame(),document.dispatchEvent(new Event("rocket-readystatechange")),await this._requestAnimFrame(),document.rocketonreadystatechange&&document.rocketonreadystatechange()}async _triggerWindowLoad(){await this._requestAnimFrame(),window.dispatchEvent(new Event("rocket-load")),await this._requestAnimFrame(),window.rocketonload&&window.rocketonload(),await this._requestAnimFrame(),this.allJQueries.forEach((e=>e(window).trigger("rocket-jquery-load"))),window.dispatchEvent(new Event("rocket-pageshow")),await this._requestAnimFrame(),window.rocketonpageshow&&window.rocketonpageshow()}_handleDocumentWrite(){const e=new Map;document.write=document.writeln=function(t){const n=document.currentScript,r=document.createRange(),i=n.parentElement;let o=e.get(n);void 0===o&&(o=n.nextSibling,e.set(n,o));const a=document.createDocumentFragment();r.setStart(a,0),a.appendChild(r.createContextualFragment(t)),i.insertBefore(a,o)}}async _requestAnimFrame(){return new Promise((e=>requestAnimationFrame(e)))}static run(){const e=new RocketLazyLoadScripts(["keydown","mousemove","touchmove","touchstart","touchend","wheel"]);e._addUserInteractionListener(e)}}RocketLazyLoadScripts.run();</script>
+	
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<link rel="pingback" href="https://popugai.info/xmlrpc.php">
+	<link rel="profile" href="https://gmpg.org/xfn/11" />
+		<meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+
+	<title>Как завоевать доверие вашего попугая</title><link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Roboto%3A400%7CRoboto%20Condensed%3A400%2C700%7CUbuntu%3A400%2C700&#038;subset=latin%2Clatin-ext%2Ccyrillic-ext&#038;display=swap" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%3A400%7CRoboto%20Condensed%3A400%2C700%7CUbuntu%3A400%2C700&#038;subset=latin%2Clatin-ext%2Ccyrillic-ext&#038;display=swap" media="print" onload="this.media='all'" /><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%3A400%7CRoboto%20Condensed%3A400%2C700%7CUbuntu%3A400%2C700&#038;subset=latin%2Clatin-ext%2Ccyrillic-ext&#038;display=swap" /></noscript><link rel="stylesheet" href="https://popugai.info/wp-content/cache/min/1/45eda40a293233ff0fd01c265849952b.css" media="all" data-minify="1" />
+	<meta name="description" content="В данной статье даются советы владельцам попугаев, которые помогут им более эффективно наладить свое общение с птицей, чтобы она полностью открылась и поделилась своими сокровенными секретами." />
+	<link rel="canonical" href="https://popugai.info/prostye-sposoby-zavoevat-doverie-vashego-popugaya/" />
+	<meta property="og:locale" content="ru_RU" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="Как завоевать доверие вашего попугая" />
+	<meta property="og:description" content="В данной статье даются советы владельцам попугаев, которые помогут им более эффективно наладить свое общение с птицей, чтобы она полностью открылась и поделилась своими сокровенными секретами." />
+	<meta property="og:url" content="https://popugai.info/prostye-sposoby-zavoevat-doverie-vashego-popugaya/" />
+	<meta property="og:site_name" content="Портал о попугаях" />
+	<meta property="article:published_time" content="2015-12-14T14:48:03+00:00" />
+	<meta property="article:modified_time" content="2019-11-28T23:17:37+00:00" />
+	<meta property="og:image" content="https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b.jpg" />
+	<meta property="og:image:width" content="1024" />
+	<meta property="og:image:height" content="683" />
+	<meta property="og:image:type" content="image/jpeg" />
+	<meta name="twitter:card" content="summary" />
+
+
+<link rel='dns-prefetch' href='//aflt.market.yandex.ru' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link href='https://fonts.gstatic.com' crossorigin rel='preconnect' />
+<!-- popugai.info is managing ads with Advanced Ads – https://wpadvancedads.com/ --><!--noptimize--><script id="popug-ready">
+			window.advanced_ads_ready=function(e,a){a=a||"complete";var d=function(e){return"interactive"===a?"loading"!==e:"complete"===e};d(document.readyState)?e():document.addEventListener("readystatechange",(function(a){d(a.target.readyState)&&e()}),{once:"interactive"===a})},window.advanced_ads_ready_queue=window.advanced_ads_ready_queue||[];		</script>
+		<!--/noptimize-->
+
+
+
+
+
+
+
+
+
+
+
+<style id='gridlove-main-inline-css' type='text/css'>
+body{font-size: 16px;}h1, .h1 {font-size: 40px;}h2, .h2,.col-lg-12 .gridlove-post-b .h3 {font-size: 26px;}h3, .h3 {font-size: 22px;}h4, .h4 {font-size: 20px;}h5, .h5 {font-size: 18px;}h6, .h6 {font-size: 16px;}.widget, .gridlove-header-responsive .sub-menu, .gridlove-site-header .sub-menu{font-size: 14px;}.gridlove-main-navigation {font-size: 18px;}.gridlove-post {font-size: 16px;}body{background-color: #f3f3f3;background-image:url('https://popugai.info/wp-content/uploads/2019/11/fon.jpg');color: #5e5e5e;font-family: 'Roboto';font-weight: 400;}h1, h2, h3, h4, h5, h6,.h1, .h2, .h3, .h4, .h5, .h6,blockquote,thead td,.comment-author b,q:before,#bbpress-forums .bbp-forum-title, #bbpress-forums .bbp-topic-permalink{color: #111111;font-family: 'Roboto Condensed';font-weight: 700;}.gridlove-main-nav a,.gridlove-posts-widget a{font-family: 'Ubuntu';font-weight: 700;}.gridlove-header-top{background-color: #222222;color: #dddddd;}.gridlove-header-top a{color: #dddddd;}.gridlove-header-top a:hover{color: #ffffff;}.gridlove-header-wrapper,.gridlove-header-middle .sub-menu,.gridlove-header-responsive,.gridlove-header-responsive .sub-menu{background-color:#ffffff; }.gridlove-header-middle,.gridlove-header-middle a,.gridlove-header-responsive,.gridlove-header-responsive a{color: #111111;}.gridlove-header-middle a:hover,.gridlove-header-middle .gridlove-sidebar-action:hover,.gridlove-header-middle .gridlove-actions-button > span:hover,.gridlove-header-middle .current_page_item > a,.gridlove-header-middle .current_page_ancestor > a,.gridlove-header-middle .current-menu-item > a,.gridlove-header-middle .current-menu-ancestor > a,.gridlove-header-middle .gridlove-category-menu article:hover a,.gridlove-header-responsive a:hover {color: #00b709;}.gridlove-header-middle .active>span,.gridlove-header-middle .gridlove-main-nav>li.menu-item-has-children:hover>a,.gridlove-header-middle .gridlove-social-icons:hover>span,.gridlove-header-responsive .active>span{background-color: rgba(17,17,17,0.05)}.gridlove-header-middle .gridlove-button-search{background-color: #00b709;}.gridlove-header-middle .gridlove-search-form input{border-color: rgba(17,17,17,0.1)}.gridlove-header-middle .sub-menu,.gridlove-header-responsive .sub-menu{border-top: 1px solid rgba(17,17,17,0.05)}.gridlove-header-middle{height: 100px;}.gridlove-logo{max-height: 100px;}.gridlove-branding-bg{background:#f0233b;}.gridlove-header-responsive .gridlove-actions-button:hover >span{color:#00b709;}.gridlove-sidebar-action .gridlove-bars:before,.gridlove-sidebar-action .gridlove-bars:after{background:#111111;}.gridlove-sidebar-action:hover .gridlove-bars:before,.gridlove-sidebar-action:hover .gridlove-bars:after{background:#00b709;}.gridlove-sidebar-action .gridlove-bars{border-color: #111111;}.gridlove-sidebar-action:hover .gridlove-bars{border-color:#00b709;}.gridlove-header-bottom .sub-menu{ background-color:#ffffff;}.gridlove-header-bottom .sub-menu a{color:#111111;}.gridlove-header-bottom .sub-menu a:hover,.gridlove-header-bottom .gridlove-category-menu article:hover a{color:#009cff;}.gridlove-header-bottom{background-color:#ffffff;}.gridlove-header-bottom,.gridlove-header-bottom a{color: #111111;}.gridlove-header-bottom a:hover,.gridlove-header-bottom .gridlove-sidebar-action:hover,.gridlove-header-bottom .gridlove-actions-button > span:hover,.gridlove-header-bottom .current_page_item > a,.gridlove-header-bottom .current_page_ancestor > a,.gridlove-header-bottom .current-menu-item > a,.gridlove-header-bottom .current-menu-ancestor > a {color: #009cff;}.gridlove-header-bottom .active>span,.gridlove-header-bottom .gridlove-main-nav>li.menu-item-has-children:hover>a,.gridlove-header-bottom .gridlove-social-icons:hover>span{background-color: rgba(17,17,17,0.05)}.gridlove-header-bottom .gridlove-search-form input{border-color: rgba(17,17,17,0.1)}.gridlove-header-bottom,.gridlove-header-bottom .sub-menu{border-top: 1px solid rgba(17,17,17,0.07)}.gridlove-header-bottom .gridlove-button-search{background-color: #009cff;}.gridlove-header-sticky,.gridlove-header-sticky .sub-menu{background-color:#ffffff; }.gridlove-header-sticky,.gridlove-header-sticky a{color: #111111;}.gridlove-header-sticky a:hover,.gridlove-header-sticky .gridlove-sidebar-action:hover,.gridlove-header-sticky .gridlove-actions-button > span:hover,.gridlove-header-sticky .current_page_item > a,.gridlove-header-sticky .current_page_ancestor > a,.gridlove-header-sticky .current-menu-item > a,.gridlove-header-sticky .current-menu-ancestor > a,.gridlove-header-sticky .gridlove-category-menu article:hover a{color: #00b709;}.gridlove-header-sticky .active>span,.gridlove-header-sticky .gridlove-main-nav>li.menu-item-has-children:hover>a,.gridlove-header-sticky .gridlove-social-icons:hover>span{background-color: rgba(17,17,17,0.05)}.gridlove-header-sticky .gridlove-search-form input{border-color: rgba(17,17,17,0.1)}.gridlove-header-sticky .sub-menu{border-top: 1px solid rgba(17,17,17,0.05)}.gridlove-header-sticky .gridlove-button-search{background-color: #00b709;}.gridlove-cover-area,.gridlove-cover{height:500px; }.gridlove-cover-area .gridlove-cover-bg img{width:1500px; }.gridlove-box,#disqus_thread{background: #ffffff;}a{color: #5e5e5e;}.entry-title a{ color: #111111;}a:hover,.comment-reply-link,#cancel-comment-reply-link,.gridlove-box .entry-title a:hover,.gridlove-posts-widget article:hover a{color: #00b709;}.entry-content p a,.widget_text a,.entry-content ul a,.entry-content ol a,.gridlove-text-module-content p a{color: #00b709; border-color: rgba(0,183,9,0.8);}.entry-content p a:hover,.widget_text a:hover,.entry-content ul a:hover,.entry-content ol a:hover,.gridlove-text-module-content p a:hover{border-bottom: 1px solid transparent;}.comment-reply-link:hover,.gallery .gallery-item a:after, .wp-block-gallery .blocks-gallery-item a:after, .entry-content a.gridlove-popup-img {color: #5e5e5e; }.gridlove-post-b .box-col-b:only-child .entry-title a,.gridlove-post-d .entry-overlay:only-child .entry-title a{color: #111111;}.gridlove-post-b .box-col-b:only-child .entry-title a:hover,.gridlove-post-d .entry-overlay:only-child .entry-title a:hover,.gridlove-content .entry-header .gridlove-breadcrumbs a,.gridlove-content .entry-header .gridlove-breadcrumbs a:hover,.module-header .gridlove-breadcrumbs a,.module-header .gridlove-breadcrumbs a:hover { color: #00b709; }.gridlove-post-b .box-col-b:only-child .meta-item,.gridlove-post-b .box-col-b:only-child .entry-meta a,.gridlove-post-b .box-col-b:only-child .entry-meta span,.gridlove-post-d .entry-overlay:only-child .meta-item,.gridlove-post-d .entry-overlay:only-child .entry-meta a,.gridlove-post-d .entry-overlay:only-child .entry-meta span {color: #818181;}.entry-meta .meta-item, .entry-meta a, .entry-meta span,.comment-metadata a{color: #818181;}blockquote{color: rgba(17,17,17,0.8);}blockquote:before{color: rgba(17,17,17,0.15);}.entry-meta a:hover{color: #111111;}.widget_tag_cloud a,.entry-tags a,.entry-content .wp-block-tag-cloud a{ background: rgba(94,94,94,0.1); color: #5e5e5e; }.submit,.gridlove-button,.mks_autor_link_wrap a,.mks_read_more a,input[type="submit"],button[type="submit"],.gridlove-cat, .gridlove-pill,.gridlove-button-search,body div.wpforms-container-full .wpforms-form input[type=submit], body div.wpforms-container-full .wpforms-form button[type=submit], body div.wpforms-container-full .wpforms-form .wpforms-page-button {color:#FFF;background-color: #00b709;}body div.wpforms-container-full .wpforms-form input[type=submit]:hover, body div.wpforms-container-full .wpforms-form input[type=submit]:focus, body div.wpforms-container-full .wpforms-form input[type=submit]:active, body div.wpforms-container-full .wpforms-form button[type=submit]:hover, body div.wpforms-container-full .wpforms-form button[type=submit]:focus, body div.wpforms-container-full .wpforms-form button[type=submit]:active, body div.wpforms-container-full .wpforms-form .wpforms-page-button:hover, body div.wpforms-container-full .wpforms-form .wpforms-page-button:active, body div.wpforms-container-full .wpforms-form .wpforms-page-button:focus {color:#FFF;background-color: #00b709;}.wp-block-button__link{background-color: #00b709; }.gridlove-button:hover{color:#FFF;}.gridlove-share a:hover{background:rgba(17, 17, 17, .8);color:#FFF;}.gridlove-pill:hover,.gridlove-author-links a:hover,.entry-category a:hover{background: #111;color: #FFF;}.gridlove-cover-content .entry-category a:hover,.entry-overlay .entry-category a:hover,.gridlove-highlight .entry-category a:hover,.gridlove-box.gridlove-post-d .entry-overlay .entry-category a:hover,.gridlove-post-a .entry-category a:hover,.gridlove-highlight .gridlove-format-icon{background: #FFF;color: #111;}.gridlove-author, .gridlove-prev-next-nav,.comment .comment-respond{border-color: rgba(94,94,94,0.1);}.gridlove-load-more a,.gridlove-pagination .gridlove-next a,.gridlove-pagination .gridlove-prev a,.gridlove-pagination .next,.gridlove-pagination .prev,.gridlove-infinite-scroll a,.double-bounce1, .double-bounce2,.gridlove-link-pages > span,.module-actions ul.page-numbers span.page-numbers{color:#FFF;background-color: #00b709;}.gridlove-pagination .current{background-color:rgba(94,94,94,0.1);}.gridlove-highlight{background: #083b5c;}.gridlove-highlight,.gridlove-highlight h4,.gridlove-highlight a{color: #ffffff;}.gridlove-highlight .entry-meta .meta-item, .gridlove-highlight .entry-meta a, .gridlove-highlight .entry-meta span,.gridlove-highlight p{color: rgba(255,255,255,0.8);}.gridlove-highlight .gridlove-author-links .fa-link,.gridlove-highlight .gridlove_category_widget .gridlove-full-color li a:after{background: #96d3a8;}.gridlove-highlight .entry-meta a:hover{color: #ffffff;}.gridlove-highlight.gridlove-post-d .entry-image a:after{background-color: rgba(8,59,92,0.7);}.gridlove-highlight.gridlove-post-d:hover .entry-image a:after{background-color: rgba(8,59,92,0.9);}.gridlove-highlight.gridlove-post-a .entry-image:hover>a:after, .gridlove-highlight.gridlove-post-b .entry-image:hover a:after{background-color: rgba(8,59,92,0.2);}.gridlove-highlight .gridlove-slider-controls > div{background-color: rgba(255,255,255,0.1);color: #ffffff; }.gridlove-highlight .gridlove-slider-controls > div:hover{background-color: rgba(255,255,255,0.3);color: #ffffff; }.gridlove-highlight.gridlove-box .entry-title a:hover{color: #96d3a8;}.gridlove-highlight.widget_meta a, .gridlove-highlight.widget_recent_entries li, .gridlove-highlight.widget_recent_comments li, .gridlove-highlight.widget_nav_menu a, .gridlove-highlight.widget_archive li, .gridlove-highlight.widget_pages a{border-color: rgba(255,255,255,0.1);}.gridlove-cover-content .entry-meta .meta-item, .gridlove-cover-content .entry-meta a, .gridlove-cover-content .entry-meta span,.gridlove-cover-area .gridlove-breadcrumbs,.gridlove-cover-area .gridlove-breadcrumbs a,.gridlove-cover-area .gridlove-breadcrumbs .breadcrumb_last,body .gridlove-content .entry-overlay .gridlove-breadcrumbs {color: rgba(255, 255, 255, .8);}.gridlove-cover-content .entry-meta a:hover,.gridlove-cover-area .gridlove-breadcrumbs a:hover {color: rgba(255, 255, 255, 1);}.module-title h2,.module-title .h2{ color: #111111; }.gridlove-action-link,.gridlove-slider-controls > div,.module-actions ul.page-numbers .next.page-numbers,.module-actions ul.page-numbers .prev.page-numbers{background: rgba(17,17,17,0.1); color: #111111; }.gridlove-slider-controls > div:hover,.gridlove-action-link:hover,.module-actions ul.page-numbers .next.page-numbers:hover,.module-actions ul.page-numbers .prev.page-numbers:hover{color: #111111;background: rgba(17,17,17,0.3); }.gridlove-pn-ico,.gridlove-author-links .fa-link{background: rgba(94,94,94,0.1); color: #5e5e5e;}.gridlove-prev-next-nav a:hover .gridlove-pn-ico{background: rgba(0,183,9,1); color: #ffffff;}.widget_meta a,.widget_recent_entries li,.widget_recent_comments li,.widget_nav_menu a,.widget_archive li,.widget_pages a,.widget_categories li,.gridlove_category_widget .gridlove-count-color li,.widget_categories .children li,.widget_archiv .children li{border-color: rgba(94,94,94,0.1);}.widget_recent_entries a:hover,.menu-item-has-children.active > span,.menu-item-has-children.active > a,.gridlove-nav-widget-acordion:hover,.widget_recent_comments .recentcomments a.url:hover{color: #00b709;}.widget_recent_comments .url,.post-date,.widget_recent_comments .recentcomments,.gridlove-nav-widget-acordion,.widget_archive li,.rss-date,.widget_categories li,.widget_archive li{color:#818181;}.widget_pages .children,.widget_nav_menu .sub-menu{background:#00b709;color:#FFF;}.widget_pages .children a,.widget_nav_menu .sub-menu a,.widget_nav_menu .sub-menu span,.widget_pages .children span{color:#FFF;}.widget_tag_cloud a:hover,.entry-tags a:hover,.entry-content .wp-block-tag-cloud a:hover{background: #00b709;color:#FFF;}.gridlove-footer{background: #111111;color: #ffffff;}.gridlove-footer .widget-title{color: #ffffff;}.gridlove-footer a{color: rgba(255,255,255,0.8);}.gridlove-footer a:hover{color: #ffffff;}.gridlove-footer .widget_recent_comments .url, .gridlove-footer .post-date, .gridlove-footer .widget_recent_comments .recentcomments, .gridlove-footer .gridlove-nav-widget-acordion, .gridlove-footer .widget_archive li, .gridlove-footer .rss-date{color: rgba(255,255,255,0.8); }.gridlove-footer .widget_meta a, .gridlove-footer .widget_recent_entries li, .gridlove-footer .widget_recent_comments li, .gridlove-footer .widget_nav_menu a, .gridlove-footer .widget_archive li, .gridlove-footer .widget_pages a,.gridlove-footer table,.gridlove-footer td,.gridlove-footer th,.gridlove-footer .widget_calendar table,.gridlove-footer .widget.widget_categories select,.gridlove-footer .widget_calendar table tfoot tr td{border-color: rgba(255,255,255,0.2);}table,thead,td,th,.widget_calendar table{ border-color: rgba(94,94,94,0.1);}input[type="text"], input[type="email"],input[type="search"], input[type="url"], input[type="tel"], input[type="number"], input[type="date"], input[type="password"], select, textarea{border-color: rgba(94,94,94,0.2);}div.mejs-container .mejs-controls {background-color: rgba(94,94,94,0.1);}body .mejs-controls .mejs-time-rail .mejs-time-current{background: #00b709;}body .mejs-video.mejs-container .mejs-controls{background-color: rgba(255,255,255,0.9);}.wp-block-cover .wp-block-cover-image-text, .wp-block-cover .wp-block-cover-text, .wp-block-cover h2, .wp-block-cover-image .wp-block-cover-image-text, .wp-block-cover-image .wp-block-cover-text, .wp-block-cover-image h2{font-family: 'Roboto Condensed';font-weight: 700; }.wp-block-cover-image .wp-block-cover-image-text, .wp-block-cover-image h2{font-size: 26px;}.widget_display_replies li, .widget_display_topics li{ color:#818181; }.has-small-font-size{ font-size: 12px;}.has-large-font-size{ font-size: 20px;}.has-huge-font-size{ font-size: 25px;}@media(min-width: 1024px){.has-small-font-size{ font-size: 12px;}.has-normal-font-size{ font-size: 16px;}.has-large-font-size{ font-size: 20px;}.has-huge-font-size{ font-size: 27px;}}.has-gridlove-acc-background-color{ background-color: #00b709;}.has-gridlove-acc-color{ color: #00b709;}.has-gridlove-meta-background-color{ background-color: #818181;}.has-gridlove-meta-color{ color: #818181;}.has-gridlove-txt-background-color{ background-color: #5e5e5e;}.has-gridlove-txt-color{ color: #5e5e5e;}.has-gridlove-bg-background-color{ background-color: #ffffff;}.has-gridlove-bg-color{ color: #ffffff;}.has-gridlove-highlight-acc-background-color{ background-color: #96d3a8;}.has-gridlove-highlight-acc-color{ color: #96d3a8;}.has-gridlove-highlight-txt-background-color{ background-color: #ffffff;}.has-gridlove-highlight-txt-color{ color: #ffffff;}.has-gridlove-highlight-bg-background-color{ background-color: #083b5c;}.has-gridlove-highlight-bg-color{ color: #083b5c;}.has-gridlove-cat-119-background-color{ background-color: #757575;}.has-gridlove-cat-119-color{ color: #757575;}.has-gridlove-cat-128-background-color{ background-color: #8224e3;}.has-gridlove-cat-128-color{ color: #8224e3;}.has-gridlove-cat-6-background-color{ background-color: #dd9933;}.has-gridlove-cat-6-color{ color: #dd9933;}.has-gridlove-cat-4-background-color{ background-color: #dd3333;}.has-gridlove-cat-4-color{ color: #dd3333;}.has-gridlove-cat-120-background-color{ background-color: #1e73be;}.has-gridlove-cat-120-color{ color: #1e73be;}.has-gridlove-cat-124-background-color{ background-color: #0091c6;}.has-gridlove-cat-124-color{ color: #0091c6;}.has-gridlove-cat-122-background-color{ background-color: #b500b2;}.has-gridlove-cat-122-color{ color: #b500b2;}.has-gridlove-cat-118-background-color{ background-color: #00a57c;}.has-gridlove-cat-118-color{ color: #00a57c;}.has-gridlove-cat-3-background-color{ background-color: #1e73be;}.has-gridlove-cat-3-color{ color: #1e73be;}.has-gridlove-cat-117-background-color{ background-color: #007e8c;}.has-gridlove-cat-117-color{ color: #007e8c;}.has-gridlove-cat-116-background-color{ background-color: #eded10;}.has-gridlove-cat-116-color{ color: #eded10;}.has-gridlove-cat-5-background-color{ background-color: #a5b500;}.has-gridlove-cat-5-color{ color: #a5b500;}.has-gridlove-cat-183-background-color{ background-color: #048906;}.has-gridlove-cat-183-color{ color: #048906;}.gridlove-cats .gridlove-cat .entry-overlay-wrapper .entry-image:after, .gridlove-cat.gridlove-post-d .entry-image a:after { background-color: rgba(0,183,9,0.7); }.gridlove-cat.gridlove-post-d:hover .entry-image a:after { background-color: rgba(0,183,9,0.9); }.gridlove-cat-119{ background: #757575;}.gridlove-cat-col-119:hover{ color: #757575;}.gridlove-cats .gridlove-cat-119 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-119.gridlove-post-d .entry-image a:after { background-color: rgba(117,117,117,0.7); }.gridlove-cat-119.gridlove-post-d:hover .entry-image a:after { background-color: rgba(117,117,117,0.9); }.gridlove-cat-128{ background: #8224e3;}.gridlove-cat-col-128:hover{ color: #8224e3;}.gridlove-cats .gridlove-cat-128 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-128.gridlove-post-d .entry-image a:after { background-color: rgba(130,36,227,0.7); }.gridlove-cat-128.gridlove-post-d:hover .entry-image a:after { background-color: rgba(130,36,227,0.9); }.gridlove-cat-6{ background: #dd9933;}.gridlove-cat-col-6:hover{ color: #dd9933;}.gridlove-cats .gridlove-cat-6 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-6.gridlove-post-d .entry-image a:after { background-color: rgba(221,153,51,0.7); }.gridlove-cat-6.gridlove-post-d:hover .entry-image a:after { background-color: rgba(221,153,51,0.9); }.gridlove-cat-4{ background: #dd3333;}.gridlove-cat-col-4:hover{ color: #dd3333;}.gridlove-cats .gridlove-cat-4 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-4.gridlove-post-d .entry-image a:after { background-color: rgba(221,51,51,0.7); }.gridlove-cat-4.gridlove-post-d:hover .entry-image a:after { background-color: rgba(221,51,51,0.9); }.gridlove-cat-120{ background: #1e73be;}.gridlove-cat-col-120:hover{ color: #1e73be;}.gridlove-cats .gridlove-cat-120 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-120.gridlove-post-d .entry-image a:after { background-color: rgba(30,115,190,0.7); }.gridlove-cat-120.gridlove-post-d:hover .entry-image a:after { background-color: rgba(30,115,190,0.9); }.gridlove-cat-124{ background: #0091c6;}.gridlove-cat-col-124:hover{ color: #0091c6;}.gridlove-cats .gridlove-cat-124 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-124.gridlove-post-d .entry-image a:after { background-color: rgba(0,145,198,0.7); }.gridlove-cat-124.gridlove-post-d:hover .entry-image a:after { background-color: rgba(0,145,198,0.9); }.gridlove-cat-122{ background: #b500b2;}.gridlove-cat-col-122:hover{ color: #b500b2;}.gridlove-cats .gridlove-cat-122 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-122.gridlove-post-d .entry-image a:after { background-color: rgba(181,0,178,0.7); }.gridlove-cat-122.gridlove-post-d:hover .entry-image a:after { background-color: rgba(181,0,178,0.9); }.gridlove-cat-118{ background: #00a57c;}.gridlove-cat-col-118:hover{ color: #00a57c;}.gridlove-cats .gridlove-cat-118 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-118.gridlove-post-d .entry-image a:after { background-color: rgba(0,165,124,0.7); }.gridlove-cat-118.gridlove-post-d:hover .entry-image a:after { background-color: rgba(0,165,124,0.9); }.gridlove-cat-3{ background: #1e73be;}.gridlove-cat-col-3:hover{ color: #1e73be;}.gridlove-cats .gridlove-cat-3 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-3.gridlove-post-d .entry-image a:after { background-color: rgba(30,115,190,0.7); }.gridlove-cat-3.gridlove-post-d:hover .entry-image a:after { background-color: rgba(30,115,190,0.9); }.gridlove-cat-117{ background: #007e8c;}.gridlove-cat-col-117:hover{ color: #007e8c;}.gridlove-cats .gridlove-cat-117 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-117.gridlove-post-d .entry-image a:after { background-color: rgba(0,126,140,0.7); }.gridlove-cat-117.gridlove-post-d:hover .entry-image a:after { background-color: rgba(0,126,140,0.9); }.gridlove-cat-116{ background: #eded10;}.gridlove-cat-col-116:hover{ color: #eded10;}.gridlove-cats .gridlove-cat-116 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-116.gridlove-post-d .entry-image a:after { background-color: rgba(237,237,16,0.7); }.gridlove-cat-116.gridlove-post-d:hover .entry-image a:after { background-color: rgba(237,237,16,0.9); }.gridlove-cat-5{ background: #a5b500;}.gridlove-cat-col-5:hover{ color: #a5b500;}.gridlove-cats .gridlove-cat-5 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-5.gridlove-post-d .entry-image a:after { background-color: rgba(165,181,0,0.7); }.gridlove-cat-5.gridlove-post-d:hover .entry-image a:after { background-color: rgba(165,181,0,0.9); }.gridlove-cat-183{ background: #048906;}.gridlove-cat-col-183:hover{ color: #048906;}.gridlove-cats .gridlove-cat-183 .entry-overlay-wrapper .entry-image:after, .gridlove-cat-183.gridlove-post-d .entry-image a:after { background-color: rgba(4,137,6,0.7); }.gridlove-cat-183.gridlove-post-d:hover .entry-image a:after { background-color: rgba(4,137,6,0.9); }
+</style>
+
+<link rel='stylesheet' id='gridlove_child_load_scripts-css'  href='https://popugai.info/wp-content/themes/gridlove-child/style.css' type='text/css' media='screen' />
+
+<style id='rocket-lazyload-inline-css' type='text/css'>
+.rll-youtube-player{position:relative;padding-bottom:56.23%;height:0;overflow:hidden;max-width:100%;}.rll-youtube-player:focus-within{outline: 2px solid currentColor;outline-offset: 5px;}.rll-youtube-player iframe{position:absolute;top:0;left:0;width:100%;height:100%;z-index:100;background:0 0}.rll-youtube-player img{bottom:0;display:block;left:0;margin:auto;max-width:100%;width:100%;position:absolute;right:0;top:0;border:none;height:auto;-webkit-transition:.4s all;-moz-transition:.4s all;transition:.4s all}.rll-youtube-player img:hover{-webkit-filter:brightness(75%)}.rll-youtube-player .play{height:100%;width:100%;left:0;top:0;position:absolute;background:url(https://popugai.info/wp-content/plugins/wp-rocket/assets/img/youtube.png) no-repeat center;background-color: transparent !important;cursor:pointer;border:none;}.wp-embed-responsive .wp-has-aspect-ratio .rll-youtube-player{position:absolute;padding-bottom:0;width:100%;height:100%;top:0;bottom:0;left:0;right:0}
+</style>
+<script type='text/javascript' src='https://popugai.info/wp-includes/js/jquery/jquery.min.js' id='jquery-core-js'></script>
+<script type='text/javascript' src='https://popugai.info/wp-includes/js/jquery/jquery-migrate.min.js' id='jquery-migrate-js'></script>
+<script type='text/javascript' id='cld-frontend-js-extra'>
+/* <![CDATA[ */
+var cld_js_object = {"admin_ajax_url":"https:\/\/popugai.info\/wp-admin\/admin-ajax.php","admin_ajax_nonce":"0752e0131c"};
+/* ]]> */
+</script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/comments-like-dislike/js/cld-frontend.js?ver=1634768873' id='cld-frontend-js'></script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/photo-gallery/js/bwg_frontend.js?ver=1634768873' id='bwg_frontend-js'></script>
+<script type='text/javascript' id='bwg_sumoselect-js-extra'>
+/* <![CDATA[ */
+var bwg_objectsL10n = {"bwg_select_tag":"Select Tag."};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://popugai.info/wp-content/plugins/photo-gallery/js/jquery.sumoselect.min.js' id='bwg_sumoselect-js'></script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/photo-gallery/js/jquery.mobile.js?ver=1634768873' id='bwg_jquery_mobile-js'></script>
+<script type='text/javascript' src='https://popugai.info/wp-content/plugins/photo-gallery/js/jquery.mCustomScrollbar.concat.min.js' id='bwg_mCustomScrollbar-js'></script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/photo-gallery/js/jquery.fullscreen-0.4.1.js?ver=1634768873' id='jquery-fullscreen-js'></script>
+<script type='text/javascript' id='bwg_gallery_box-js-extra'>
+/* <![CDATA[ */
+var bwg_objectL10n = {"bwg_field_required":"field is required.","bwg_mail_validation":"\u042d\u0442\u043e \u043d\u0435\u043f\u0440\u0430\u0432\u0438\u043b\u044c\u043d\u044b\u0439 \u0430\u0434\u0440\u0435\u0441 \u044d\u043b\u0435\u043a\u0442\u0440\u043e\u043d\u043d\u043e\u0439 \u043f\u043e\u0447\u0442\u044b.","bwg_search_result":"\u041f\u043e \u0432\u0430\u0448\u0435\u043c\u0443 \u043f\u043e\u0438\u0441\u043a\u0443 \u0438\u0437\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e"};
+/* ]]> */
+</script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/photo-gallery/js/bwg_gallery_box.js?ver=1634768873' id='bwg_gallery_box-js'></script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/photo-gallery/js/jquery.raty.js?ver=1634768873' id='bwg_raty-js'></script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/photo-gallery/js/jquery.featureCarousel.js?ver=1634768873' id='bwg_featureCarousel-js'></script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/photo-gallery/js/3DEngine/3DEngine.js?ver=1634768873' id='bwg_3DEngine-js'></script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/photo-gallery/js/3DEngine/Sphere.js?ver=1634768873' id='bwg_Sphere-js'></script>
+<script type='text/javascript' id='advanced-ads-advanced-js-js-extra'>
+/* <![CDATA[ */
+var advads_options = {"blog_id":"1","privacy":{"enabled":false,"state":"not_needed"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://popugai.info/wp-content/plugins/advanced-ads/public/assets/js/advanced.min.js' id='advanced-ads-advanced-js-js'></script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/advanced-ads-pro/assets/advanced-ads-pro.js?ver=1634768873' id='advanced-ds-pro/front-js'></script>
+<script type='text/javascript' id='advanced-ads-pro/cache_busting-js-extra'>
+/* <![CDATA[ */
+var advanced_ads_pro_ajax_object = {"ajax_url":"https:\/\/popugai.info\/wp-admin\/admin-ajax.php","lazy_load_module_enabled":"","lazy_load":{"default_offset":0,"offsets":[]},"moveintohidden":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://popugai.info/wp-content/plugins/advanced-ads-pro/modules/cache-busting/inc/base.min.js' id='advanced-ads-pro/cache_busting-js'></script>
+<style>.pseudo-clearfy-link { color: #008acf; cursor: pointer;}.pseudo-clearfy-link:hover { text-decoration: none;}</style><!-- Yandex.Metrika counter -->
+<script type="rocketlazyloadscript" data-rocket-type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(34131415, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true
+   });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/34131415" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+<!-- Yandex.RTB -->
+<script type="rocketlazyloadscript">window.yaContextCb=window.yaContextCb||[]</script>
+<script type="rocketlazyloadscript" src="https://yandex.ru/ads/system/context.js" async></script>
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png"><style></style><script type="rocketlazyloadscript" data-rocket-type="text/javascript">
+	window._wp_rp_static_base_url = 'https://rp.zemanta.com/static/';
+	window._wp_rp_wp_ajax_url = "https://popugai.info/wp-admin/admin-ajax.php";
+	window._wp_rp_plugin_version = '3.6.1';
+	window._wp_rp_post_id = '1233';
+	window._wp_rp_num_rel_posts = '4';
+	window._wp_rp_thumbnails = true;
+	window._wp_rp_post_title = '%D0%9F%D1%80%D0%BE%D1%81%D1%82%D1%8B%D0%B5+%D1%81%D0%BF%D0%BE%D1%81%D0%BE%D0%B1%D1%8B+%D0%B7%D0%B0%D0%B2%D0%BE%D0%B5%D0%B2%D0%B0%D1%82%D1%8C+%D0%B4%D0%BE%D0%B2%D0%B5%D1%80%D0%B8%D0%B5+%D0%B2%D0%B0%D1%88%D0%B5%D0%B3%D0%BE+%D0%BF%D0%BE%D0%BF%D1%83%D0%B3%D0%B0%D1%8F';
+	window._wp_rp_post_tags = ['%D0%A1%D1%82%D0%B0%D1%82%D1%8C%D0%B8', 'alt', 'a'];
+</script>
+
+<style type="text/css">
+.related_post_title {
+}
+ul.related_post {
+    text-align: center;
+}
+ul.related_post li img {
+    width: 148px !important;
+    height: 148px !important;
+	border-radius: 74px !important;
+		}
+	
+	ul.related_post li
+	{
+	    width: 148px !important;
+	    width: 148px !important;
+		
+	}
+
+ul.related_post li a {
+    font-size: 13px !important;
+    font-weight: bolder;
+	}
+
+ul.related_post li img {
+}</style>
+<script data-minify="1" type="text/javascript" src="https://popugai.info/wp-content/cache/min/1/wp-content/plugins/wt-copy-link/script/jscript3.js?ver=1634768873"></script><script type="text/javascript">var wp_copy={tag:"Read more",ex:0,url:"https://popugai.info/wp-content/plugins/wt-copy-link",nonce:"3fd6806d51",ip:"91.106.205.235",save:0,save_content:0};</script><script type="rocketlazyloadscript">advads_items = { conditions: {}, display_callbacks: {}, display_effect_callbacks: {}, hide_callbacks: {}, backgrounds: {}, effect_durations: {}, close_functions: {}, showed: [] };</script><style type="text/css" id="popug-layer-custom-css"></style>
+<link rel="preload" as="font" href="https://popugai.info/wp-content/plugins/shortcodes-ultimate/includes/fonts/fork-awesome/forkawesome-webfont.woff2?v=1.0.11" crossorigin>
+<link rel="preload" as="font" href="https://popugai.info/wp-content/themes/gridlove/assets/fonts/fontawesome-webfont.woff2?v=4.7.0" crossorigin><script type="rocketlazyloadscript" data-rocket-type="text/javascript">
+		var advadsCfpQueue = [];
+		var advadsCfpAd = function( adID ){
+			if ( 'undefined' == typeof advadsProCfp ) { advadsCfpQueue.push( adID ) } else { advadsProCfp.addElement( adID ) }
+		};
+		</script>		<style type="text/css" id="wp-custom-css">
+			@media only screen and (max-device-width: 900px)
+	
+{
+	.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+	
+ 
+.gridlove-content {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.container
+{
+	    padding-left: 0px;
+    padding-right: 0px;
+}
+	
+span.site-title.h1 {
+    margin-left: 20px;
+}
+	
+}
+
+
+span.advads-close-button {
+line-height: 30px !important;
+    top: -30px !important;
+	    font-size: 30px !important;
+		width: 30px !important;
+    height: 30px !important;
+    background: #34b763 !important;
+    color: #fff !important;
+}		</style>
+		<style>
+.ai-viewports                 {--ai: 1;}
+.ai-viewport-3                { display: none !important;}
+.ai-viewport-2                { display: none !important;}
+.ai-viewport-1                { display: inherit !important;}
+.ai-viewport-0                { display: none !important;}
+@media (min-width: 768px) and (max-width: 979px) {
+.ai-viewport-1                { display: none !important;}
+.ai-viewport-2                { display: inherit !important;}
+}
+@media (max-width: 767px) {
+.ai-viewport-1                { display: none !important;}
+.ai-viewport-3                { display: inherit !important;}
+}
+</style>
+<noscript><style id="rocket-lazyload-nojs-css">.rll-youtube-player, [data-lazy-src]{display:none !important;}</style></noscript>	
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+</head>
+
+<body class="post-template-default single single-post postid-1233 single-format-standard wp-embed-responsive unknown gridlove-v_1_9_5 gridlove-child aa-prefix-popug-">
+	
+		
+	<header id="header" class="gridlove-site-header hidden-md-down  gridlove-header-shadow">
+			
+			
+			<div class="gridlove-header-wrapper">
+    <div class="gridlove-header-1 gridlove-header-middle container">
+        
+        <div class="gridlove-slot-l">
+            
+<div class="gridlove-site-branding  ">
+			<span class="site-title h1"><a href="https://popugai.info/" rel="home"><img width="263" height="60" class="gridlove-logo" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20263%2060'%3E%3C/svg%3E" alt="Портал о попугаях" data-lazy-src="https://popugai.info/wp-content/uploads/2019/11/logo.png"><noscript><img width="263" height="60" class="gridlove-logo" src="https://popugai.info/wp-content/uploads/2019/11/logo.png" alt="Портал о попугаях"></noscript></a></span>
+	
+	
+</div>
+
+        </div>
+
+        <div class="gridlove-slot-r">
+            <nav class="gridlove-main-navigation">	
+				<ul id="menu-glavnoe-menyu" class="gridlove-main-nav gridlove-menu"><li id="menu-item-5" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-5"><a href="//popugai.info/">Главная</a></li>
+<li id="menu-item-3328" class="menu-item menu-item-type-post_type_archive menu-item-object-vidy menu-item-has-children menu-item-3328"><a href="https://popugai.info/vidy/">Виды</a>
+<ul class="sub-menu">
+	<li id="menu-item-5375" class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5375"><a href="https://popugai.info/vidy/volnistye-popugai/">Волнистые попугаи</a></li>
+	<li id="menu-item-5376" class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5376"><a href="https://popugai.info/vidy/korella/">Корелла</a></li>
+	<li id="menu-item-5377" class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5377"><a href="https://popugai.info/vidy/nerazluchniki/">Неразлучники</a></li>
+	<li id="menu-item-5378" class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5378"><a href="https://popugai.info/vidy/zhako-2/">Жако</a></li>
+	<li id="menu-item-5379" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-5379"><a href="/vidy/">Все виды</a></li>
+</ul>
+</li>
+<li id="menu-item-2627" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2627"><a href="https://popugai.info/uxod/">Уход</a></li>
+<li id="menu-item-2628" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2628"><a href="https://popugai.info/lechenie/">Лечение</a></li>
+<li id="menu-item-2629" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2629"><a href="https://popugai.info/kormlenie/">Кормление</a></li>
+<li id="menu-item-3680" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor menu-item-has-children menu-item-3680"><a href="https://popugai.info/materialy/">Разное</a>
+<ul class="sub-menu">
+	<li id="menu-item-6435" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-6435"><a href="https://popugai.info/foto/">Фото</a></li>
+	<li id="menu-item-6436" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-6436"><a href="https://popugai.info/video/">Видео</a></li>
+</ul>
+</li>
+</ul>	</nav>            	<ul class="gridlove-actions gridlove-menu">
+					<li class="gridlove-actions-button gridlove-action-search">
+	<span>
+		<i class="fa fa-search"></i>
+	</span>
+	<ul class="sub-menu">
+		<li>
+			<form class="gridlove-search-form" action="https://popugai.info/" method="get"><input name="s" type="text" value="" placeholder="Поиск..." /><button type="submit" class="gridlove-button-search">Поиск</button></form>		</li>
+	</ul>
+</li>			</ul>
+        </div>
+        
+    </div>
+</div>
+
+							 
+									<div id="gridlove-header-sticky" class="gridlove-header-sticky">
+	<div class="container">
+		
+		<div class="gridlove-slot-l">
+						
+<div class="gridlove-site-branding  ">
+			<span class="site-title h1"><a href="https://popugai.info/" rel="home"><img width="263" height="60" class="gridlove-logo" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20263%2060'%3E%3C/svg%3E" alt="Портал о попугаях" data-lazy-src="https://popugai.info/wp-content/uploads/2019/11/logo.png"><noscript><img width="263" height="60" class="gridlove-logo" src="https://popugai.info/wp-content/uploads/2019/11/logo.png" alt="Портал о попугаях"></noscript></a></span>
+	
+	
+</div>
+
+		</div>	
+		<div class="gridlove-slot-r">
+																<nav class="gridlove-main-navigation">				
+						<ul id="menu-glavnoe-menyu-1" class="gridlove-main-nav gridlove-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-5"><a href="//popugai.info/">Главная</a></li>
+<li class="menu-item menu-item-type-post_type_archive menu-item-object-vidy menu-item-has-children menu-item-3328"><a href="https://popugai.info/vidy/">Виды</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5375"><a href="https://popugai.info/vidy/volnistye-popugai/">Волнистые попугаи</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5376"><a href="https://popugai.info/vidy/korella/">Корелла</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5377"><a href="https://popugai.info/vidy/nerazluchniki/">Неразлучники</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5378"><a href="https://popugai.info/vidy/zhako-2/">Жако</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-5379"><a href="/vidy/">Все виды</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2627"><a href="https://popugai.info/uxod/">Уход</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2628"><a href="https://popugai.info/lechenie/">Лечение</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2629"><a href="https://popugai.info/kormlenie/">Кормление</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor menu-item-has-children menu-item-3680"><a href="https://popugai.info/materialy/">Разное</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-6435"><a href="https://popugai.info/foto/">Фото</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-6436"><a href="https://popugai.info/video/">Видео</a></li>
+</ul>
+</li>
+</ul>					</nav>
+									<ul class="gridlove-actions gridlove-menu">
+					<li class="gridlove-actions-button gridlove-action-search">
+	<span>
+		<i class="fa fa-search"></i>
+	</span>
+	<ul class="sub-menu">
+		<li>
+			<form class="gridlove-search-form" action="https://popugai.info/" method="get"><input name="s" type="text" value="" placeholder="Поиск..." /><button type="submit" class="gridlove-button-search">Поиск</button></form>		</li>
+	</ul>
+</li>			</ul>
+			  
+		</div>
+	</div>
+</div>								
+			
+	</header>
+
+	<div id="gridlove-header-responsive" class="gridlove-header-responsive hidden-lg-up">
+
+	<div class="container">
+		
+		
+<div class="gridlove-site-branding  ">
+			<span class="site-title h1"><a href="https://popugai.info/" rel="home"><img width="263" height="60" class="gridlove-logo" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20263%2060'%3E%3C/svg%3E" alt="Портал о попугаях" data-lazy-src="https://popugai.info/wp-content/uploads/2019/11/logo.png"><noscript><img width="263" height="60" class="gridlove-logo" src="https://popugai.info/wp-content/uploads/2019/11/logo.png" alt="Портал о попугаях"></noscript></a></span>
+	
+	
+</div>
+
+
+		<ul class="gridlove-actions gridlove-menu">
+
+								<li class="gridlove-actions-button gridlove-action-search">
+	<span>
+		<i class="fa fa-search"></i>
+	</span>
+	<ul class="sub-menu">
+		<li>
+			<form class="gridlove-search-form" action="https://popugai.info/" method="get"><input name="s" type="text" value="" placeholder="Поиск..." /><button type="submit" class="gridlove-button-search">Поиск</button></form>		</li>
+	</ul>
+</li>				
+			<li class="gridlove-actions-button">
+	<span class="gridlove-sidebar-action">
+		<i class="fa fa-bars"></i>
+	</span>
+</li>	
+</ul>
+	</div>
+
+</div>
+
+
+
+
+
+
+<div id="content" class="gridlove-site-content container gridlove-sidebar-right">
+
+    <div class="row">
+
+    	
+        <div class="gridlove-content gridlove-single-layout-1">
+
+            <div class='ai-viewports ai-viewport-3 ai-insert-9-91443400' style='margin: 8px 0; clear: both;' data-insertion='prepend' data-selector='.ai-insert-9-91443400' data-insertion-no-dbg data-code='PGRpdiBjbGFzcz0nY29kZS1ibG9jayBjb2RlLWJsb2NrLTknIHN0eWxlPSdtYXJnaW46IDhweCAwOyBjbGVhcjogYm90aDsnPgo8cCBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyIj48YSBocmVmPSJodHRwczovL3ZrZG9jLnJ1LyI+CjxpbWcgd2lkdGg9Ijk2MiIgaGVpZ2h0PSI0ODEiIHNyYz0iaHR0cHM6Ly9wb3B1Z2FpLmluZm8vd3AtY29udGVudC91cGxvYWRzLzIwMjEvMDEvcHVwdWdhaS12ZXQuanBnIiBzdHlsZT0iYm9yZGVyLXdpZHRoOiAwcHgiPjwvYT48L3A+Cgo8L2Rpdj4K' data-block='9'></div>
+
+                
+                <article id="post-1233" class="gridlove-box box-vm post-1233 post type-post status-publish format-standard has-post-thumbnail hentry category-stati">
+	
+    <div class="entry-image">
+        <img width="740" height="494" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20740%20494'%3E%3C/svg%3E" class="attachment-gridlove-single size-gridlove-single wp-post-image" alt="Фото: Amarpreet K" data-lazy-srcset="https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-740x494.jpg 740w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-380x253.jpg 380w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-768x512.jpg 768w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-370x247.jpg 370w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-270x180.jpg 270w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-570x380.jpg 570w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b.jpg 1024w" data-lazy-sizes="(max-width: 740px) 100vw, 740px" data-lazy-src="https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-740x494.jpg" /><noscript><img width="740" height="494" src="https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-740x494.jpg" class="attachment-gridlove-single size-gridlove-single wp-post-image" alt="Фото: Amarpreet K" srcset="https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-740x494.jpg 740w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-380x253.jpg 380w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-768x512.jpg 768w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-370x247.jpg 370w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-270x180.jpg 270w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b-570x380.jpg 570w, https://popugai.info/wp-content/uploads/2015/12/8095205933_7fc7fba186_b.jpg 1024w" sizes="(max-width: 740px) 100vw, 740px" /></noscript>            </div>
+ 
+                        
+<div class="box-inner-p-bigger box-single">
+
+    <div class="entry-header">
+		<div class="entry-category">
+	    
+	    	        <a href="https://popugai.info/materialy/stati/" class="gridlove-cat gridlove-cat-1">Статьи</a>	    	</div>
+
+    <h1 class="entry-title">Простые способы завоевать доверие вашего попугая</h1>
+        	<div class="entry-meta"><div class="meta-item meta-date"><span class="updated">14.12.2015</span></div></div>
+    
+</div>
+    
+
+<div class="entry-content">
+    
+    	    
+    <p>Потраченное владельцем попугая время на то, чтобы сблизиться со своим питомцем, ни в коем случае нельзя считать напрасно пропавшим, поскольку только таким образом возможно построить длительные, прочные и успешные отношения с домашним любимцем.</p>
+<p><span id="more-1233"></span></p><div class='code-block code-block-1' style='margin: 8px 0; clear: both;'>
+<script type="rocketlazyloadscript" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- popugai.info - Первый (2 абзац) -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3183777437388948"
+     data-ad-slot="2607286941"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script type="rocketlazyloadscript">
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script></div>
+
+<p>Птиц нельзя считать в полной мере одомашненными животными, поскольку в них крепко сидит стайный инстинкт. Таким образом, общаясь со своим попугаем, владелец дает ему понять, что является его другом. Безусловно, такая невидимая связь между человеком и птицей в значительной степени улучшит качество жизни попугая, а хозяину позволит приобрести бесценный опыт.</p>
+<p>Для того чтобы завоевать доверие попугая существует огромное количество способов. Например, можно попробовать разделить трапезу со своим пернатым другом. Совместные обед с питомцем является великолепным способом помочь ему воспринимать вас как часть стаи. Это неудивительно, поскольку в дикой природе птицы охотно делятся кормом друг с другом, что позволяет им выжить. Таким образом, предлагая попугаю свою еду, вы даете ему понять, что для вас его персона имеет большое значение, что вы не желаете ему никакого вреда, ваше отношение к нему дружелюбно.</p>
+<figure id="attachment_2640" aria-describedby="caption-attachment-2640" style="width: 768px" class="wp-caption alignnone"><img class="wp-image-2640 size-medium" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20768%20576'%3E%3C/svg%3E" alt="" width="768" height="576" data-lazy-src="//popugai.info/wp-content/uploads/2015/12/kakzdoverie0-1-796x597.jpg" /><noscript><img class="wp-image-2640 size-medium" src="//popugai.info/wp-content/uploads/2015/12/kakzdoverie0-1-796x597.jpg" alt="" width="768" height="576" /></noscript><figcaption id="caption-attachment-2640" class="wp-caption-text">Фото: <a href="https://www.flickr.com/photos/rgtmum/" target="_blank" rel="noopener noreferrer">Carol Munro</a></figcaption></figure>
+<p>Однако, прежде чем угощать пернатого друга со своей тарелки, следует убедиться, что пища, которой вы хотите поделиться, не содержит соли и специй, поскольку они являются для птиц ядом. Если попугай относится к предложенной еде настороженно и не решается ее взять, то можно положить кусочек в его миску и начать есть перед ним. В процессе едынужно разговаривать с ним тихим и мягким голосом, нахваливая угощение. По мнению опытных любителей птиц, такой нехитрый прием довольно часто срабатывает.</p>
+<p>Важно уделять как можно больше времени для общения со своим попугаем. Особенно это имеет большое значение для тех птиц, которые обрели новый дом или просто были спасены в дикой природе. В этом случае они не имели возможности близко взаимодействовать с человеком. Или, что многократно хуже, предыдущий опыт общения с людьми был негативным.</p>
+<p>В этом случае нужно запастить терпением и не форсировать события. Возможно при вашем приближении попугай будет беспокоиться или сильно нервничать. Тогда начните общаться с птицей по 5 – 10 минут в день. Сначала можно просто молчапосидеть около клетки. Когда питомец освоится с вашим присутствием, можно начать негромко разговаривать. Следует быть предельно осторожным и не делать резких движений. Кроме того, голос также не должен быть слишком резким и громким. Лишь после того как пернатый друг будет чувствовать себя во время вашего присутствия комфортно, продолжительность общения можно будет без опаски увеличивать.</p>
+<figure id="attachment_2637" aria-describedby="caption-attachment-2637" style="width: 563px" class="wp-caption alignnone"><img class="size-large wp-image-2637" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20563%20700'%3E%3C/svg%3E" alt="Фото: Dwayne Madden" width="563" height="700" data-lazy-src="//popugai.info/wp-content/uploads/2015/12/kakzdoverie1-824x1024.jpg" /><noscript><img class="size-large wp-image-2637" src="//popugai.info/wp-content/uploads/2015/12/kakzdoverie1-824x1024.jpg" alt="Фото: Dwayne Madden" width="563" height="700" /></noscript><figcaption id="caption-attachment-2637" class="wp-caption-text">Фото: <a href="https://www.flickr.com/photos/dj-dwayne/" target="_blank" rel="noopener noreferrer">Dwayne Madden</a></figcaption></figure>
+<p>В дикой природе между птицами весьма развит взаимный уход и забота. Именно такой тип поведения может однозначно идентифицировать особей из одной стаи. Таким образом, если вы хотите, чтобы попугай вас принимал как члена семьи, стоит поухаживать за питомцем, если только он не будет против. Для начала можно нежно потрепать его по затылку или помочь расправить перышки. Позднее, когда между вами установятся более доверительные отношения, можно взять птицу с собой в ванную комнату для совместного принятия водных процедур.</p>
+<p>По мнению специалистов, в дикой природе птицы общаются друг с другом посредством голоса и с помощью языка тела. Это знание можно умело использовать, чтобы помочь себе установить более тесный контакт с домашним любимцем. Если вам кажется, что попугай не воспринимает вас как своего друга, то попробуйте спеть для него несколько своих любимых песен и станцуйте рядом с клеткой. Возможно, что это звучит как полный бред, но поверьте, редкий попугай останется при этом равнодушным и сможет противостоять желанию присоединиться к всеобщему веселью. Даже можно специально исполнить несколько песен о птицах, чтобы настроиться на нужный лад.</p>
+<p>Самый действенный способ завести дружбу с пугливым попугаем заключается в том, чтобы подкупить его. Можно, например, изготовить своими руками несколько игрушек для своего питомца, а затем положить их в клетку, чтобы он смог с ними поиграть. Обратите внимание, с какими игрушками ваш питомец играет охотнее всего. После этого можно украсить свою одежду именно этими игрушками и встать около открытой дверцы птичьей клетки. Ваш попугай наверняка сразу поймет, что вы очень добрый и забавный человек. Кроме того, он сможет определить, что вы предлагаете ему дружбу, а от такого предложения пернатым трудно отказаться.</p>
+<figure id="attachment_2749" aria-describedby="caption-attachment-2749" style="width: 768px" class="wp-caption alignnone"><img class="size-large wp-image-2749" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20768%20519'%3E%3C/svg%3E" alt="Фото: Micolo J" width="768" height="519" data-lazy-srcset="https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-768x519.jpg 768w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-380x257.jpg 380w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-370x250.jpg 370w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-270x182.jpg 270w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-570x385.jpg 570w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-740x500.jpg 740w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj.jpg 1024w" data-lazy-sizes="(max-width: 768px) 100vw, 768px" data-lazy-src="//popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-768x519.jpg" /><noscript><img class="size-large wp-image-2749" src="//popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-768x519.jpg" alt="Фото: Micolo J" width="768" height="519" srcset="https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-768x519.jpg 768w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-380x257.jpg 380w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-370x250.jpg 370w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-270x182.jpg 270w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-570x385.jpg 570w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj-740x500.jpg 740w, https://popugai.info/wp-content/uploads/2015/12/zelenyj-volnistyj-popugaj.jpg 1024w" sizes="(max-width: 768px) 100vw, 768px" /></noscript><figcaption id="caption-attachment-2749" class="wp-caption-text">Фото: <a href="https://www.flickr.com/photos/robin1966/" target="_blank" rel="noopener noreferrer">Micolo J</a></figcaption></figure>
+<div class='code-block code-block-8' style='margin: 8px 0; clear: both;'>
+<div style="margin-bottom:30px;">
+
+<!-- Yandex.RTB R-A-349646-1 -->
+<div id="yandex_rtb_R-A-349646-1"></div>
+<script type="rocketlazyloadscript">window.yaContextCb.push(()=>{
+  Ya.Context.AdvManager.render({
+    renderTo: 'yandex_rtb_R-A-349646-1',
+    blockId: 'R-A-349646-1'
+  })
+})</script></div></div>
+<!-- AI CONTENT END 1 -->
+
+    
+    
+    		    
+</div>
+    
+    
+
+</div>
+
+</article>
+                            
+
+            
+            
+            
+            
+    
+    
+        
+            <div class="gridlove-related">
+                <div class="gridlove-module">
+
+                    <div class="module-header"><div class="module-title"><h4 class="h2">Читайте также</h4></div></div>                    
+                    
+                                        <div class="row">
+                        
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <article class="gridlove-post gridlove-post-d gridlove-box  post-1084 post type-post status-publish format-standard has-post-thumbnail hentry category-lechenie">
+
+            <div class="entry-image">
+            <a href="https://popugai.info/kleshhi-u-popugaya-vidy-simptomy-i-lechenie/" title="Клещи у попугая: виды, симптомы и лечение"><img width="370" height="300" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20370%20300'%3E%3C/svg%3E" class="attachment-gridlove-d4 size-gridlove-d4 wp-post-image" alt="" data-lazy-src="https://popugai.info/wp-content/uploads/2015/09/25-370x300.jpg" /><noscript><img width="370" height="300" src="https://popugai.info/wp-content/uploads/2015/09/25-370x300.jpg" class="attachment-gridlove-d4 size-gridlove-d4 wp-post-image" alt="" /></noscript></a>
+        </div>
+    
+    <div class="entry-overlay box-inner-p">
+        <div class="box-inner-ellipsis">
+            <div class="entry-category">
+                                                    
+                            </div>
+            <h2 class="entry-title h3"><a href="https://popugai.info/kleshhi-u-popugaya-vidy-simptomy-i-lechenie/">Клещи у попугая: виды, симптомы и лечение</a></h2>        </div>
+            </div>    
+
+</article>                            </div>
+
+                        
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <article class="gridlove-post gridlove-post-d gridlove-box  post-3483 post type-post status-publish format-standard has-post-thumbnail hentry category-kormlenie">
+
+            <div class="entry-image">
+            <a href="https://popugai.info/korm-dlya-volnistyx-popugaev/" title="Корм для волнистых попугаев"><img width="370" height="300" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20370%20300'%3E%3C/svg%3E" class="attachment-gridlove-d4 size-gridlove-d4 wp-post-image" alt="" data-lazy-src="https://popugai.info/wp-content/uploads/2016/02/popugaj-est-zerno-370x300.jpg" /><noscript><img width="370" height="300" src="https://popugai.info/wp-content/uploads/2016/02/popugaj-est-zerno-370x300.jpg" class="attachment-gridlove-d4 size-gridlove-d4 wp-post-image" alt="" /></noscript></a>
+        </div>
+    
+    <div class="entry-overlay box-inner-p">
+        <div class="box-inner-ellipsis">
+            <div class="entry-category">
+                                                    
+                            </div>
+            <h2 class="entry-title h3"><a href="https://popugai.info/korm-dlya-volnistyx-popugaev/">Корм для волнистых попугаев</a></h2>        </div>
+            </div>    
+
+</article>                            </div>
+
+                        
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <article class="gridlove-post gridlove-post-d gridlove-box  post-5794 post type-post status-publish format-standard has-post-thumbnail hentry category-lechenie">
+
+            <div class="entry-image">
+            <a href="https://popugai.info/vertolet-ili-shpagat-u-ptencov-popugaev/" title="&#171;Вертолет&#187; или &#171;шпагат&#187; у птенцов попугаев"><img width="370" height="300" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20370%20300'%3E%3C/svg%3E" class="attachment-gridlove-d4 size-gridlove-d4 wp-post-image" alt="" data-lazy-src="https://popugai.info/wp-content/uploads/2017/09/vertolet-370x300.png" /><noscript><img width="370" height="300" src="https://popugai.info/wp-content/uploads/2017/09/vertolet-370x300.png" class="attachment-gridlove-d4 size-gridlove-d4 wp-post-image" alt="" /></noscript></a>
+        </div>
+    
+    <div class="entry-overlay box-inner-p">
+        <div class="box-inner-ellipsis">
+            <div class="entry-category">
+                                                    
+                            </div>
+            <h2 class="entry-title h3"><a href="https://popugai.info/vertolet-ili-shpagat-u-ptencov-popugaev/">&#171;Вертолет&#187; или &#171;шпагат&#187; у птенцов попугаев</a></h2>        </div>
+            </div>    
+
+</article>                            </div>
+
+                        
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <article class="gridlove-post gridlove-post-d gridlove-box  post-973 post type-post status-publish format-standard has-post-thumbnail hentry category-stati">
+
+            <div class="entry-image">
+            <a href="https://popugai.info/skolko-let-zhivut-volnistye-popugai-v-domashnix-usloviyax/" title="Сколько живут волнистые попугаи"><img width="370" height="300" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20370%20300'%3E%3C/svg%3E" class="attachment-gridlove-d4 size-gridlove-d4 wp-post-image" alt="Сколько лет живут волнистые попугаи" data-lazy-src="https://popugai.info/wp-content/uploads/2015/07/skolko-let-zhivut-volnistye-popugai-370x300.jpg" /><noscript><img width="370" height="300" src="https://popugai.info/wp-content/uploads/2015/07/skolko-let-zhivut-volnistye-popugai-370x300.jpg" class="attachment-gridlove-d4 size-gridlove-d4 wp-post-image" alt="Сколько лет живут волнистые попугаи" /></noscript></a>
+        </div>
+    
+    <div class="entry-overlay box-inner-p">
+        <div class="box-inner-ellipsis">
+            <div class="entry-category">
+                                                    
+                            </div>
+            <h2 class="entry-title h3"><a href="https://popugai.info/skolko-let-zhivut-volnistye-popugai-v-domashnix-usloviyax/">Сколько живут волнистые попугаи</a></h2>        </div>
+            </div>    
+
+</article>                            </div>
+
+                                            </div>
+                </div>
+            </div>
+
+        
+        
+    
+
+        </div>
+
+        
+
+	<div class="gridlove-sidebar">
+
+		
+						<div class="gridlove-sticky-sidebar">
+					<div id="ai_widget-2" class="widget gridlove-box ai_widget"><div class='ai-viewports ai-viewport-1 ai-insert-10-12372032' style='margin: 8px 0; clear: both;' data-insertion='prepend' data-selector='.ai-insert-10-12372032' data-insertion-no-dbg data-code='PGRpdiBjbGFzcz0nY29kZS1ibG9jayBjb2RlLWJsb2NrLTEwJyBzdHlsZT0nbWFyZ2luOiA4cHggMDsgY2xlYXI6IGJvdGg7Jz4KPHAgc3R5bGU9InRleHQtYWxpZ246IGNlbnRlciI+PGNlbnRlcj48YSBocmVmPSJodHRwczovL3ZrZG9jLnJ1LyI+CjxpbWcgc3JjPSJodHRwczovL3BvcHVnYWkuaW5mby93cC1jb250ZW50L3VwbG9hZHMvMjAxNy8wOC92a2RvY3J1LnBuZyIgc3R5bGU9ImJvcmRlci13aWR0aDogMHB4Ij48L2E+PC9jZW50ZXI+PC9wPjwvZGl2Pgo=' data-block='10'></div>
+
+</div>				</div>
+		
+	</div>
+
+    </div>
+        
+</div>
+
+
+
+
+<div id="footer" class="gridlove-footer">
+
+	
+    
+	        <div class="gridlove-copyright">
+	            <div class="container">
+	                <p style="text-align: center">© 2008 — 2022 «Popugai.info – всё о попугаях». Любое копирование запрещено.</p>
+<p style="text-align: center"><a href="/obratnaya-svyaz/">Контакты</a> · <a href="/materialy/">Разное о попугаях</a></p>	            </div>
+	        </div>
+
+	
+</div>
+
+
+<div class="gridlove-sidebar-action-wrapper">
+
+	<span class="gridlove-action-close"><i class="fa fa-times" aria-hidden="true"></i></span>
+
+	<div class="gridlove-sidebar-action-inside">
+
+		<div class="hidden-lg-up widget gridlove-box widget_nav_menu">
+					<ul id="menu-glavnoe-menyu-2" class="gridlove-mobile-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-5"><a href="//popugai.info/">Главная</a></li>
+<li class="menu-item menu-item-type-post_type_archive menu-item-object-vidy menu-item-has-children menu-item-3328"><a href="https://popugai.info/vidy/">Виды</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5375"><a href="https://popugai.info/vidy/volnistye-popugai/">Волнистые попугаи</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5376"><a href="https://popugai.info/vidy/korella/">Корелла</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5377"><a href="https://popugai.info/vidy/nerazluchniki/">Неразлучники</a></li>
+	<li class="menu-item menu-item-type-post_type menu-item-object-vidy menu-item-5378"><a href="https://popugai.info/vidy/zhako-2/">Жако</a></li>
+	<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-5379"><a href="/vidy/">Все виды</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2627"><a href="https://popugai.info/uxod/">Уход</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2628"><a href="https://popugai.info/lechenie/">Лечение</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-2629"><a href="https://popugai.info/kormlenie/">Кормление</a></li>
+<li class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor menu-item-has-children menu-item-3680"><a href="https://popugai.info/materialy/">Разное</a>
+<ul class="sub-menu">
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-6435"><a href="https://popugai.info/foto/">Фото</a></li>
+	<li class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-6436"><a href="https://popugai.info/video/">Видео</a></li>
+</ul>
+</li>
+</ul>		</div>
+
+		
+
+	</div>
+
+</div>
+
+<div class="gridlove-sidebar-action-overlay"></div>
+<script type="rocketlazyloadscript">var pseudo_links = document.querySelectorAll(".pseudo-clearfy-link");for (var i=0;i<pseudo_links.length;i++ ) { pseudo_links[i].addEventListener("click", function(e){   window.open( e.target.getAttribute("data-uri") ); }); }</script><!-- Global site tag (gtag.js) - Google Analytics -->
+<script type="rocketlazyloadscript" async src="https://www.googletagmanager.com/gtag/js?id=UA-71273153-1"></script>
+<script type="rocketlazyloadscript">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-71273153-1');
+</script><script type="rocketlazyloadscript">
+jQuery(document).ready(function ($) {
+$('article table').wrap('<div class="table-cover"></div>');
+});
+</script>
+<style>
+@media screen and (max-width: 1035px) {
+.table-cover {
+width: 100%;
+overflow: auto;
+margin: 0 0 1em;
+}
+}
+</style>
+<script type='text/javascript' id='toc-front-js-extra'>
+/* <![CDATA[ */
+var tocplus = {"visibility_show":"\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c","visibility_hide":"\u0421\u043a\u0440\u044b\u0442\u044c","width":"Auto"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://popugai.info/wp-content/plugins/table-of-contents-plus/front.min.js' id='toc-front-js'></script>
+<script type='text/javascript' id='advanced-ads-layer-footer-js-js-extra'>
+/* <![CDATA[ */
+var advanced_ads_layer_settings = {"layer_class":"popug-layer"};
+/* ]]> */
+</script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/advanced-ads-layer/public/assets/js/layer.js?ver=1634768873' id='advanced-ads-layer-footer-js-js'></script>
+<script type='text/javascript' id='advanced-ads-sticky-footer-js-js-extra'>
+/* <![CDATA[ */
+var advanced_ads_sticky_settings = {"check_position_fixed":"","sticky_class":"popug-sticky"};
+/* ]]> */
+</script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/plugins/advanced-ads-sticky-ads/public/assets/js/sticky.js?ver=1634768873' id='advanced-ads-sticky-footer-js-js'></script>
+<script type='text/javascript' id='rocket-browser-checker-js-after'>
+"use strict";var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||!1,descriptor.configurable=!0,"value"in descriptor&&(descriptor.writable=!0),Object.defineProperty(target,descriptor.key,descriptor)}}return function(Constructor,protoProps,staticProps){return protoProps&&defineProperties(Constructor.prototype,protoProps),staticProps&&defineProperties(Constructor,staticProps),Constructor}}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor))throw new TypeError("Cannot call a class as a function")}var RocketBrowserCompatibilityChecker=function(){function RocketBrowserCompatibilityChecker(options){_classCallCheck(this,RocketBrowserCompatibilityChecker),this.passiveSupported=!1,this._checkPassiveOption(this),this.options=!!this.passiveSupported&&options}return _createClass(RocketBrowserCompatibilityChecker,[{key:"_checkPassiveOption",value:function(self){try{var options={get passive(){return!(self.passiveSupported=!0)}};window.addEventListener("test",null,options),window.removeEventListener("test",null,options)}catch(err){self.passiveSupported=!1}}},{key:"initRequestIdleCallback",value:function(){!1 in window&&(window.requestIdleCallback=function(cb){var start=Date.now();return setTimeout(function(){cb({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-start))}})},1)}),!1 in window&&(window.cancelIdleCallback=function(id){return clearTimeout(id)})}},{key:"isDataSaverModeOn",value:function(){return"connection"in navigator&&!0===navigator.connection.saveData}},{key:"supportsLinkPrefetch",value:function(){var elem=document.createElement("link");return elem.relList&&elem.relList.supports&&elem.relList.supports("prefetch")&&window.IntersectionObserver&&"isIntersecting"in IntersectionObserverEntry.prototype}},{key:"isSlowConnection",value:function(){return"connection"in navigator&&"effectiveType"in navigator.connection&&("2g"===navigator.connection.effectiveType||"slow-2g"===navigator.connection.effectiveType)}}]),RocketBrowserCompatibilityChecker}();
+</script>
+<script type='text/javascript' id='rocket-preload-links-js-extra'>
+/* <![CDATA[ */
+var RocketPreloadLinksConfig = {"excludeUris":"\/(.+\/)?feed\/?.+\/?|\/(?:.+\/)?embed\/|\/(index\\.php\/)?wp\\-json(\/.*|$)|\/wp-admin\/|\/logout\/|\/wp-login.php","usesTrailingSlash":"1","imageExt":"jpg|jpeg|gif|png|tiff|bmp|webp|avif","fileExt":"jpg|jpeg|gif|png|tiff|bmp|webp|avif|php|pdf|html|htm","siteUrl":"https:\/\/popugai.info","onHoverDelay":"100","rateThrottle":"3"};
+/* ]]> */
+</script>
+<script type='text/javascript' id='rocket-preload-links-js-after'>
+(function() {
+"use strict";var r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},e=function(){function i(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(e,t,n){return t&&i(e.prototype,t),n&&i(e,n),e}}();function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var t=function(){function n(e,t){i(this,n),this.browser=e,this.config=t,this.options=this.browser.options,this.prefetched=new Set,this.eventTime=null,this.threshold=1111,this.numOnHover=0}return e(n,[{key:"init",value:function(){!this.browser.supportsLinkPrefetch()||this.browser.isDataSaverModeOn()||this.browser.isSlowConnection()||(this.regex={excludeUris:RegExp(this.config.excludeUris,"i"),images:RegExp(".("+this.config.imageExt+")$","i"),fileExt:RegExp(".("+this.config.fileExt+")$","i")},this._initListeners(this))}},{key:"_initListeners",value:function(e){-1<this.config.onHoverDelay&&document.addEventListener("mouseover",e.listener.bind(e),e.listenerOptions),document.addEventListener("mousedown",e.listener.bind(e),e.listenerOptions),document.addEventListener("touchstart",e.listener.bind(e),e.listenerOptions)}},{key:"listener",value:function(e){var t=e.target.closest("a"),n=this._prepareUrl(t);if(null!==n)switch(e.type){case"mousedown":case"touchstart":this._addPrefetchLink(n);break;case"mouseover":this._earlyPrefetch(t,n,"mouseout")}}},{key:"_earlyPrefetch",value:function(t,e,n){var i=this,r=setTimeout(function(){if(r=null,0===i.numOnHover)setTimeout(function(){return i.numOnHover=0},1e3);else if(i.numOnHover>i.config.rateThrottle)return;i.numOnHover++,i._addPrefetchLink(e)},this.config.onHoverDelay);t.addEventListener(n,function e(){t.removeEventListener(n,e,{passive:!0}),null!==r&&(clearTimeout(r),r=null)},{passive:!0})}},{key:"_addPrefetchLink",value:function(i){return this.prefetched.add(i.href),new Promise(function(e,t){var n=document.createElement("link");n.rel="prefetch",n.href=i.href,n.onload=e,n.onerror=t,document.head.appendChild(n)}).catch(function(){})}},{key:"_prepareUrl",value:function(e){if(null===e||"object"!==(void 0===e?"undefined":r(e))||!1 in e||-1===["http:","https:"].indexOf(e.protocol))return null;var t=e.href.substring(0,this.config.siteUrl.length),n=this._getPathname(e.href,t),i={original:e.href,protocol:e.protocol,origin:t,pathname:n,href:t+n};return this._isLinkOk(i)?i:null}},{key:"_getPathname",value:function(e,t){var n=t?e.substring(this.config.siteUrl.length):e;return n.startsWith("/")||(n="/"+n),this._shouldAddTrailingSlash(n)?n+"/":n}},{key:"_shouldAddTrailingSlash",value:function(e){return this.config.usesTrailingSlash&&!e.endsWith("/")&&!this.regex.fileExt.test(e)}},{key:"_isLinkOk",value:function(e){return null!==e&&"object"===(void 0===e?"undefined":r(e))&&(!this.prefetched.has(e.href)&&e.origin===this.config.siteUrl&&-1===e.href.indexOf("?")&&-1===e.href.indexOf("#")&&!this.regex.excludeUris.test(e.href)&&!this.regex.images.test(e.href))}}],[{key:"run",value:function(){"undefined"!=typeof RocketPreloadLinksConfig&&new n(new RocketBrowserCompatibilityChecker({capture:!0,passive:!0}),RocketPreloadLinksConfig).init()}}]),n}();t.run();
+}());
+</script>
+<script type='text/javascript' src='https://popugai.info/wp-includes/js/imagesloaded.min.js' id='imagesloaded-js'></script>
+<script type='text/javascript' src='https://popugai.info/wp-includes/js/masonry.min.js' id='masonry-js'></script>
+<script type='text/javascript' src='https://popugai.info/wp-includes/js/jquery/jquery.masonry.min.js' id='jquery-masonry-js'></script>
+<script type='text/javascript' id='gridlove-main-js-extra'>
+/* <![CDATA[ */
+var gridlove_js_settings = {"rtl_mode":"","header_sticky":"1","header_sticky_offset":"100","header_sticky_up":"","logo":"https:\/\/popugai.info\/wp-content\/uploads\/2019\/11\/logo.png","logo_retina":"","logo_mini":"","logo_mini_retina":"","gridlove_gallery":"1","responsive_secondary_nav":"","responsive_more_link":"","responsive_social_nav":""};
+/* ]]> */
+</script>
+<script data-minify="1" type='text/javascript' src='https://popugai.info/wp-content/cache/min/1/wp-content/themes/gridlove/assets/js/min.js?ver=1634768873' id='gridlove-main-js'></script>
+<script type="rocketlazyloadscript" data-rocket-type='text/javascript' src='https://aflt.market.yandex.ru/widget/script/api' id='vce-yamarket-js'></script>
+<!--noptimize--><script type="rocketlazyloadscript">!function(){window.advanced_ads_ready_queue=window.advanced_ads_ready_queue||[],advanced_ads_ready_queue.push=window.advanced_ads_ready;for(var d=0,a=advanced_ads_ready_queue.length;d<a;d++)advanced_ads_ready(advanced_ads_ready_queue[d])}();</script><!--/noptimize--><script type="rocketlazyloadscript">!function(){var t=!1;try{var e=Object.defineProperty({},"passive",{get:function(){t=!0}});window.addEventListener("test",null,e)}catch(t){}return t}()||function(i){var o=!0,s=!1;EventTarget.prototype.addEventListener=function(t,e,n){var r="object"==typeof n,a=r?n.capture:n;n=r?n:{},"touchstart"!=t&&"scroll"!=t&&"wheel"!=t||(n.passive=void 0!==n.passive?n.passive:o),n.capture=void 0!==a?a:s,i.call(this,t,e,n)}}(EventTarget.prototype.addEventListener);</script><script>
+function b2a(a){var b,c=0,l=0,f="",g=[];if(!a)return a;do{var e=a.charCodeAt(c++);var h=a.charCodeAt(c++);var k=a.charCodeAt(c++);var d=e<<16|h<<8|k;e=63&d>>18;h=63&d>>12;k=63&d>>6;d&=63;g[l++]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(e)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(h)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(k)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(d)}while(c<
+a.length);return f=g.join(""),b=a.length%3,(b?f.slice(0,b-3):f)+"===".slice(b||3)}function a2b(a){var b,c,l,f={},g=0,e=0,h="",k=String.fromCharCode,d=a.length;for(b=0;64>b;b++)f["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(b)]=b;for(c=0;d>c;c++)for(b=f[a.charAt(c)],g=(g<<6)+b,e+=6;8<=e;)((l=255&g>>>(e-=8))||d-2>c)&&(h+=k(l));return h}b64e=function(a){return btoa(encodeURIComponent(a).replace(/%([0-9A-F]{2})/g,function(b,a){return String.fromCharCode("0x"+a)}))};
+b64d=function(a){return decodeURIComponent(atob(a).split("").map(function(a){return"%"+("00"+a.charCodeAt(0).toString(16)).slice(-2)}).join(""))};
+/* <![CDATA[ */
+ai_front = {"insertion_before":"\u041f\u0415\u0420\u0415\u0414","insertion_after":"\u041f\u041e\u0421\u041b\u0415","insertion_prepend":"PREPEND CONTENT","insertion_append":"\u0414\u041e\u0411\u0410\u0412\u042c\u0422\u0415 \u0421\u041e\u0414\u0415\u0420\u0416\u0418\u041c\u041e\u0415","insertion_replace_content":"\u0417\u0410\u041c\u0415\u041d\u0418\u0422\u0415 \u041a\u041e\u041d\u0422\u0415\u041d\u0422","insertion_replace_element":"\u0417\u0410\u041c\u0415\u041d\u0418\u0422\u0415 \u042d\u041b\u0415\u041c\u0415\u041d\u0422","visible":"\u0412\u0418\u0414\u0418\u041c\u042b\u0419","hidden":"\u0421\u041a\u0420\u042b\u0422","fallback":"FALLBACK","automatically_placed":"\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438 \u043f\u043e\u043c\u0435\u0449\u0430\u0435\u0442\u0441\u044f \u0441 \u043f\u043e\u043c\u043e\u0449\u044c\u044e \u043a\u043e\u0434\u0430 AdSense Auto","cancel":"\u041e\u0442\u043c\u0435\u043d\u0430","use":"\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c","add":"\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c","parent":"\u0420\u043e\u0434\u0438\u0442\u0435\u043b\u044c","cancel_element_selection":"\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c \u0432\u044b\u0431\u043e\u0440 \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u0430","select_parent_element":"\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0440\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u0441\u043a\u0438\u0439 \u044d\u043b\u0435\u043c\u0435\u043d\u0442","css_selector":"CSS \u0441\u0435\u043b\u0435\u043a\u0442\u043e\u0440","use_current_selector":"\u0418\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u0442\u0435\u043a\u0443\u0449\u0438\u0439 \u0441\u0435\u043b\u0435\u043a\u0442\u043e\u0440","element":"\u042d\u041b\u0415\u041c\u0415\u041d\u0422","path":"\u041f\u0423\u0422\u042c","selector":"\u0421\u0415\u041b\u0415\u041a\u0422\u041e\u0420"};
+/* ]]> */
+function ai_run_scripts(){(function(a){if("function"===typeof define&&define.amd){define(a);var c=!0}"object"===typeof exports&&(module.exports=a(),c=!0);if(!c){var d=window.Cookies,b=window.Cookies=a();b.noConflict=function(){window.Cookies=d;return b}}})(function(){function a(){for(var d=0,b={};d<arguments.length;d++){var f=arguments[d],e;for(e in f)b[e]=f[e]}return b}function c(d){function b(){}function f(h,k,g){if("undefined"!==typeof document){g=a({path:"/",sameSite:"Lax"},b.defaults,g);"number"===typeof g.expires&&(g.expires=
+new Date(1*new Date+864E5*g.expires));g.expires=g.expires?g.expires.toUTCString():"";try{var l=JSON.stringify(k);/^[\{\[]/.test(l)&&(k=l)}catch(p){}k=d.write?d.write(k,h):encodeURIComponent(String(k)).replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g,decodeURIComponent);h=encodeURIComponent(String(h)).replace(/%(23|24|26|2B|5E|60|7C)/g,decodeURIComponent).replace(/[\(\)]/g,escape);l="";for(var n in g)g[n]&&(l+="; "+n,!0!==g[n]&&(l+="="+g[n].split(";")[0]));return document.cookie=
+h+"="+k+l}}function e(h,k){if("undefined"!==typeof document){for(var g={},l=document.cookie?document.cookie.split("; "):[],n=0;n<l.length;n++){var p=l[n].split("="),m=p.slice(1).join("=");k||'"'!==m.charAt(0)||(m=m.slice(1,-1));try{var q=p[0].replace(/(%[0-9A-Z]{2})+/g,decodeURIComponent);m=(d.read||d)(m,q)||m.replace(/(%[0-9A-Z]{2})+/g,decodeURIComponent);if(k)try{m=JSON.parse(m)}catch(r){}g[q]=m;if(h===q)break}catch(r){}}return h?g[h]:g}}b.set=f;b.get=function(h){return e(h,!1)};b.getJSON=function(h){return e(h,
+!0)};b.remove=function(h,k){f(h,"",a(k,{expires:-1}))};b.defaults={};b.withConverter=c;return b}return c(function(){})});AiCookies=Cookies.noConflict();
+ai_check_block=function(a){if(null==a)return!0;var c=AiCookies.getJSON("aiBLOCKS");ai_debug_cookie_status="";null==c&&(c={});"undefined"!==typeof ai_delay_showing_pageviews&&(c.hasOwnProperty(a)||(c[a]={}),c[a].hasOwnProperty("d")||(c[a].d=ai_delay_showing_pageviews));if(c.hasOwnProperty(a)){for(var d in c[a]){if("x"==d){var b="",f=document.querySelectorAll('span[data-ai-block="'+a+'"]')[0];"aiHash"in f.dataset&&(b=f.dataset.aiHash);f="";c[a].hasOwnProperty("h")&&(f=c[a].h);var e=new Date;e=c[a][d]-
+Math.round(e.getTime()/1E3);if(0<e&&f==b)return ai_debug_cookie_status=a="closed for "+e+" s = "+Math.round(1E4*e/3600/24)/1E4+" days",!1;ai_set_cookie(a,"x","");c[a].hasOwnProperty("i")||c[a].hasOwnProperty("c")||ai_set_cookie(a,"h","")}else if("d"==d){if(0!=c[a][d])return ai_debug_cookie_status=a="delayed for "+c[a][d]+" pageviews",!1}else if("i"==d){b="";f=document.querySelectorAll('span[data-ai-block="'+a+'"]')[0];"aiHash"in f.dataset&&(b=f.dataset.aiHash);f="";c[a].hasOwnProperty("h")&&(f=c[a].h);
+if(0==c[a][d]&&f==b)return ai_debug_cookie_status=a="max impressions reached",!1;if(0>c[a][d]&&f==b){e=new Date;e=-c[a][d]-Math.round(e.getTime()/1E3);if(0<e)return ai_debug_cookie_status=a="max imp. reached ("+Math.round(1E4*e/24/3600)/1E4+" days = "+e+" s)",!1;ai_set_cookie(a,"i","");c[a].hasOwnProperty("c")||c[a].hasOwnProperty("x")||ai_set_cookie(a,"h","")}}if("ipt"==d&&0==c[a][d]&&(e=new Date,b=Math.round(e.getTime()/1E3),e=c[a].it-b,0<e))return ai_debug_cookie_status=a="max imp. per time reached ("+
+Math.round(1E4*e/24/3600)/1E4+" days = "+e+" s)",!1;if("c"==d){b="";f=document.querySelectorAll('span[data-ai-block="'+a+'"]')[0];"aiHash"in f.dataset&&(b=f.dataset.aiHash);f="";c[a].hasOwnProperty("h")&&(f=c[a].h);if(0==c[a][d]&&f==b)return ai_debug_cookie_status=a="max clicks reached",!1;if(0>c[a][d]&&f==b){e=new Date;e=-c[a][d]-Math.round(e.getTime()/1E3);if(0<e)return ai_debug_cookie_status=a="max clicks reached ("+Math.round(1E4*e/24/3600)/1E4+" days = "+e+" s)",!1;ai_set_cookie(a,"c","");c[a].hasOwnProperty("i")||
+c[a].hasOwnProperty("x")||ai_set_cookie(a,"h","")}}if("cpt"==d&&0==c[a][d]&&(e=new Date,b=Math.round(e.getTime()/1E3),e=c[a].ct-b,0<e))return ai_debug_cookie_status=a="max clicks per time reached ("+Math.round(1E4*e/24/3600)/1E4+" days = "+e+" s)",!1}if(c.hasOwnProperty("G")&&c.G.hasOwnProperty("cpt")&&0==c.G.cpt&&(e=new Date,b=Math.round(e.getTime()/1E3),e=c.G.ct-b,0<e))return ai_debug_cookie_status=a="max global clicks per time reached ("+Math.round(1E4*e/24/3600)/1E4+" days = "+e+" s)",!1}ai_debug_cookie_status=
+"OK";return!0};
+ai_check_and_insert_block=function(a,c){if(null==a)return!0;var d=document.getElementsByClassName(c);if(d.length){d=d[0];var b=d.closest(".code-block"),f=ai_check_block(a);!f&&0!=parseInt(d.getAttribute("limits-fallback"))&&d.hasAttribute("data-fallback-code")&&(d.setAttribute("data-code",d.getAttribute("data-fallback-code")),b.hasAttribute("data-ai")&&d.hasAttribute("fallback-tracking")&&d.hasAttribute("fallback_level")&&b.setAttribute("data-ai-"+d.getAttribute("fallback_level"),d.getAttribute("fallback-tracking")),
+f=!0);if(f)ai_insert_code(d),b&&(f=b.querySelectorAll(".ai-debug-block"),b&&f.length&&(b.classList.remove("ai-list-block"),b.classList.remove("ai-list-block-ip"),b.classList.remove("ai-list-block-filter"),b.style.visibility="",b.classList.contains("ai-remove-position")&&(b.style.position="")));else{f=d.closest("div[data-ai]");if(null!=f&&"undefined"!=typeof f.getAttribute("data-ai")){var e=JSON.parse(b64d(f.getAttribute("data-ai")));"undefined"!==typeof e&&e.constructor===Array&&(e[1]="",f.setAttribute("data-ai",
+b64e(JSON.stringify(e))))}f=b.querySelectorAll(".ai-debug-block");b&&f.length&&(b.classList.remove("ai-list-block"),b.classList.remove("ai-list-block-ip"),b.classList.remove("ai-list-block-filter"),b.style.visibility="",b.classList.contains("ai-remove-position")&&(b.style.position=""))}d.classList.remove(c)}d=document.querySelectorAll("."+c+"-dbg");b=0;for(f=d.length;b<f;b++)e=d[b],e.querySelector(".ai-status").textContent=ai_debug_cookie_status,e.querySelector(".ai-cookie-data").textContent=ai_get_cookie_text(a),
+e.classList.remove(c+"-dbg")};function ai_load_cookie(){var a=AiCookies.getJSON("aiBLOCKS");null==a&&(a={});return a}function ai_get_cookie(a,c){var d="",b=ai_load_cookie();b.hasOwnProperty(a)&&b[a].hasOwnProperty(c)&&(d=b[a][c]);return d}
+function ai_set_cookie(a,c,d){var b=ai_load_cookie();if(""===d){if(b.hasOwnProperty(a)){delete b[a][c];a:{c=b[a];for(f in c)if(c.hasOwnProperty(f)){var f=!1;break a}f=!0}f&&delete b[a]}}else b.hasOwnProperty(a)||(b[a]={}),b[a][c]=d;0===Object.keys(b).length&&b.constructor===Object?AiCookies.remove("aiBLOCKS"):AiCookies.set("aiBLOCKS",b,{expires:365,path:"/"});return b}
+ai_get_cookie_text=function(a){var c=AiCookies.getJSON("aiBLOCKS");null==c&&(c={});var d="";c.hasOwnProperty("G")&&(d="G["+JSON.stringify(c.G).replace(/"/g,"").replace("{","").replace("}","")+"] ");var b="";c.hasOwnProperty(a)&&(b=JSON.stringify(c[a]).replace(/"/g,"").replace("{","").replace("}",""));return d+b};
+ai_insert=function(c,h,t){for(var n=-1!=h.indexOf(":eq")?jQuery(h):document.querySelectorAll(h),u=0,y=n.length;u<y;u++){var b=n[u];selector_string=b.hasAttribute("id")?"#"+b.getAttribute("id"):b.hasAttribute("class")?"."+b.getAttribute("class").replace(RegExp(" ","g"),"."):"";var v=document.createElement("div");v.innerHTML=t;var m=v.getElementsByClassName("ai-selector-counter")[0];null!=m&&(m.innerText=u+1);m=v.getElementsByClassName("ai-debug-name ai-main")[0];if(null!=m){var l="";"before"==c?l=
+ai_front.insertion_before:"after"==c?l=ai_front.insertion_after:"prepend"==c?l=ai_front.insertion_prepend:"append"==c?l=ai_front.insertion_append:"replace-content"==c?l=ai_front.insertion_replace_content:"replace-element"==c&&(l=ai_front.insertion_replace_element);-1==selector_string.indexOf(".ai-viewports")&&(m.innerText=l+" "+h+" ("+b.tagName.toLowerCase()+selector_string+")")}m=document.createRange();l=!0;try{var w=m.createContextualFragment(v.innerHTML)}catch(r){l=!1}"before"==c?l?b.parentNode.insertBefore(w,
+b):jQuery(v.innerHTML).insertBefore(jQuery(b)):"after"==c?l?b.parentNode.insertBefore(w,b.nextSibling):jQuery(v.innerHTML).insertBefore(jQuery(b.nextSibling)):"prepend"==c?l?b.insertBefore(w,b.firstChild):jQuery(v.innerHTML).insertBefore(jQuery(b.firstChild)):"append"==c?l?b.insertBefore(w,null):jQuery(v.innerHTML).appendTo(jQuery(b)):"replace-content"==c?(b.innerHTML="",l?b.insertBefore(w,null):jQuery(v.innerHTML).appendTo(jQuery(b))):"replace-element"==c&&(l?b.parentNode.insertBefore(w,b):jQuery(v.innerHTML).insertBefore(jQuery(b)),
+b.parentNode.removeChild(b))}};
+ai_insert_code=function(c){function h(m,l){return null==m?!1:m.classList?m.classList.contains(l):-1<(" "+m.className+" ").indexOf(" "+l+" ")}function t(m,l){null!=m&&(m.classList?m.classList.add(l):m.className+=" "+l)}function n(m,l){null!=m&&(m.classList?m.classList.remove(l):m.className=m.className.replace(new RegExp("(^|\\b)"+l.split(" ").join("|")+"(\\b|$)","gi")," "))}if("undefined"!=typeof c){var u=!1;if(h(c,"no-visibility-check")||c.offsetWidth||c.offsetHeight||c.getClientRects().length){u=
+c.getAttribute("data-code");var y=c.getAttribute("data-insertion"),b=c.getAttribute("data-selector");if(null!=u)if(null!=y&&null!=b){if(-1!=b.indexOf(":eq")?jQuery(b).length:document.querySelectorAll(b).length)ai_insert(y,b,b64d(u)),n(c,"ai-viewports")}else{y=document.createRange();b=!0;try{var v=y.createContextualFragment(b64d(u))}catch(m){b=!1}b?c.parentNode.insertBefore(v,c.nextSibling):jQuery(b64d(u)).insertBefore(jQuery(c.nextSibling));n(c,"ai-viewports")}u=!0}else v=c.previousElementSibling,
+h(v,"ai-debug-bar")&&h(v,"ai-debug-script")&&(n(v,"ai-debug-script"),t(v,"ai-debug-viewport-invisible")),n(c,"ai-viewports");return u}};
+ai_insert_list_code=function(c){var h=document.getElementsByClassName(c)[0];if("undefined"!=typeof h){var t=ai_insert_code(h),n=h.closest("div.code-block");if(n){t||n.removeAttribute("data-ai");var u=n.querySelectorAll(".ai-debug-block");n&&u.length&&(n.classList.remove("ai-list-block"),n.classList.remove("ai-list-block-ip"),n.classList.remove("ai-list-block-filter"),n.style.visibility="",n.classList.contains("ai-remove-position")&&(n.style.position=""))}h.classList.remove(c);t&&
+ai_process_elements()}};ai_insert_viewport_code=function(c){var h=document.getElementsByClassName(c)[0];if("undefined"!=typeof h){var t=ai_insert_code(h);h.classList.remove(c);t&&(c=h.closest("div.code-block"),null!=c&&(t=h.getAttribute("style"),null!=t&&c.setAttribute("style",c.getAttribute("style")+" "+t)));setTimeout(function(){h.removeAttribute("style")},2);ai_process_elements()}};
+ai_insert_code_by_class=function(c){var h=document.getElementsByClassName(c)[0];"undefined"!=typeof h&&(ai_insert_code(h),h.classList.remove(c))};ai_insert_client_code=function(c,h){var t=document.getElementsByClassName(c)[0];if("undefined"!=typeof t){var n=t.getAttribute("data-code");null!=n&&ai_check_block()&&ai_check_and_insert_block()&&(t.setAttribute("data-code",n.substring(Math.floor(h/19))),ai_insert_code_by_class(c),t.remove())}};ai_process_elements_active=!1;
+function ai_process_elements(){ai_process_elements_active||setTimeout(function(){ai_process_elements_active=!1;"function"==typeof ai_process_rotations&&ai_process_rotations();"function"==typeof ai_process_lists&&ai_process_lists(jQuery(".ai-list-data"));"function"==typeof ai_process_ip_addresses&&ai_process_ip_addresses(jQuery(".ai-ip-data"));"function"==typeof ai_process_filter_hooks&&ai_process_filter_hooks(jQuery(".ai-filter-check"));"function"==typeof ai_adb_process_blocks&&ai_adb_process_blocks();
+"function"==typeof ai_process_impressions&&1==ai_tracking_finished&&ai_process_impressions();"function"==typeof ai_install_click_trackers&&1==ai_tracking_finished&&ai_install_click_trackers();"function"==typeof ai_install_close_buttons&&ai_install_close_buttons(document)},5);ai_process_elements_active=!0}
+var Arrive=function(c,h,t){function n(r,d,e){b.addMethod(d,e,r.unbindEvent);b.addMethod(d,e,r.unbindEventWithSelectorOrCallback);b.addMethod(d,e,r.unbindEventWithSelectorAndCallback)}function u(r){r.arrive=l.bindEvent;n(l,r,"unbindArrive");r.leave=w.bindEvent;n(w,r,"unbindLeave")}if(c.MutationObserver&&"undefined"!==typeof HTMLElement){var y=0,b=function(){var r=HTMLElement.prototype.matches||HTMLElement.prototype.webkitMatchesSelector||HTMLElement.prototype.mozMatchesSelector||HTMLElement.prototype.msMatchesSelector;
+return{matchesSelector:function(d,e){return d instanceof HTMLElement&&r.call(d,e)},addMethod:function(d,e,f){var a=d[e];d[e]=function(){if(f.length==arguments.length)return f.apply(this,arguments);if("function"==typeof a)return a.apply(this,arguments)}},callCallbacks:function(d,e){e&&e.options.onceOnly&&1==e.firedElems.length&&(d=[d[0]]);for(var f=0,a;a=d[f];f++)a&&a.callback&&a.callback.call(a.elem,a.elem);e&&e.options.onceOnly&&1==e.firedElems.length&&e.me.unbindEventWithSelectorAndCallback.call(e.target,
+e.selector,e.callback)},checkChildNodesRecursively:function(d,e,f,a){for(var g=0,k;k=d[g];g++)f(k,e,a)&&a.push({callback:e.callback,elem:k}),0<k.childNodes.length&&b.checkChildNodesRecursively(k.childNodes,e,f,a)},mergeArrays:function(d,e){var f={},a;for(a in d)d.hasOwnProperty(a)&&(f[a]=d[a]);for(a in e)e.hasOwnProperty(a)&&(f[a]=e[a]);return f},toElementsArray:function(d){"undefined"===typeof d||"number"===typeof d.length&&d!==c||(d=[d]);return d}}}(),v=function(){var r=function(){this._eventsBucket=
+[];this._beforeRemoving=this._beforeAdding=null};r.prototype.addEvent=function(d,e,f,a){d={target:d,selector:e,options:f,callback:a,firedElems:[]};this._beforeAdding&&this._beforeAdding(d);this._eventsBucket.push(d);return d};r.prototype.removeEvent=function(d){for(var e=this._eventsBucket.length-1,f;f=this._eventsBucket[e];e--)d(f)&&(this._beforeRemoving&&this._beforeRemoving(f),(f=this._eventsBucket.splice(e,1))&&f.length&&(f[0].callback=null))};r.prototype.beforeAdding=function(d){this._beforeAdding=
+d};r.prototype.beforeRemoving=function(d){this._beforeRemoving=d};return r}(),m=function(r,d){var e=new v,f=this,a={fireOnAttributesModification:!1};e.beforeAdding(function(g){var k=g.target;if(k===c.document||k===c)k=document.getElementsByTagName("html")[0];var p=new MutationObserver(function(x){d.call(this,x,g)});var q=r(g.options);p.observe(k,q);g.observer=p;g.me=f});e.beforeRemoving(function(g){g.observer.disconnect()});this.bindEvent=function(g,k,p){k=b.mergeArrays(a,k);for(var q=b.toElementsArray(this),
+x=0;x<q.length;x++)e.addEvent(q[x],g,k,p)};this.unbindEvent=function(){var g=b.toElementsArray(this);e.removeEvent(function(k){for(var p=0;p<g.length;p++)if(this===t||k.target===g[p])return!0;return!1})};this.unbindEventWithSelectorOrCallback=function(g){var k=b.toElementsArray(this);e.removeEvent("function"===typeof g?function(p){for(var q=0;q<k.length;q++)if((this===t||p.target===k[q])&&p.callback===g)return!0;return!1}:function(p){for(var q=0;q<k.length;q++)if((this===t||p.target===k[q])&&p.selector===
+g)return!0;return!1})};this.unbindEventWithSelectorAndCallback=function(g,k){var p=b.toElementsArray(this);e.removeEvent(function(q){for(var x=0;x<p.length;x++)if((this===t||q.target===p[x])&&q.selector===g&&q.callback===k)return!0;return!1})};return this},l=new function(){function r(f,a,g){return b.matchesSelector(f,a.selector)&&(f._id===t&&(f._id=y++),-1==a.firedElems.indexOf(f._id))?(a.firedElems.push(f._id),!0):!1}var d={fireOnAttributesModification:!1,onceOnly:!1,existing:!1};l=new m(function(f){var a=
+{attributes:!1,childList:!0,subtree:!0};f.fireOnAttributesModification&&(a.attributes=!0);return a},function(f,a){f.forEach(function(g){var k=g.addedNodes,p=g.target,q=[];null!==k&&0<k.length?b.checkChildNodesRecursively(k,a,r,q):"attributes"===g.type&&r(p,a,q)&&q.push({callback:a.callback,elem:p});b.callCallbacks(q,a)})});var e=l.bindEvent;l.bindEvent=function(f,a,g){"undefined"===typeof g?(g=a,a=d):a=b.mergeArrays(d,a);var k=b.toElementsArray(this);if(a.existing){for(var p=[],q=0;q<k.length;q++)for(var x=
+k[q].querySelectorAll(f),z=0;z<x.length;z++)p.push({callback:g,elem:x[z]});if(a.onceOnly&&p.length)return g.call(p[0].elem,p[0].elem);setTimeout(b.callCallbacks,1,p)}e.call(this,f,a,g)};return l},w=new function(){function r(f,a){return b.matchesSelector(f,a.selector)}var d={};w=new m(function(){return{childList:!0,subtree:!0}},function(f,a){f.forEach(function(g){g=g.removedNodes;var k=[];null!==g&&0<g.length&&b.checkChildNodesRecursively(g,a,r,k);b.callCallbacks(k,a)})});var e=w.bindEvent;w.bindEvent=
+function(f,a,g){"undefined"===typeof g?(g=a,a=d):a=b.mergeArrays(d,a);e.call(this,f,a,g)};return w};h&&u(h.fn);u(HTMLElement.prototype);u(NodeList.prototype);u(HTMLCollection.prototype);u(HTMLDocument.prototype);u(Window.prototype);h={};n(l,h,"unbindAllArrive");n(w,h,"unbindAllLeave");return h}}(window,"undefined"===typeof jQuery?null:jQuery,void 0);
+var $jscomp=$jscomp||{};$jscomp.scope={};$jscomp.createTemplateTagFirstArg=function(a){return a.raw=a};$jscomp.createTemplateTagFirstArgWithRaw=function(a,n){a.raw=n;return a};$jscomp.arrayIteratorImpl=function(a){var n=0;return function(){return n<a.length?{done:!1,value:a[n++]}:{done:!0}}};$jscomp.arrayIterator=function(a){return{next:$jscomp.arrayIteratorImpl(a)}};$jscomp.makeIterator=function(a){var n="undefined"!=typeof Symbol&&Symbol.iterator&&a[Symbol.iterator];return n?n.call(a):$jscomp.arrayIterator(a)};
+jQuery(function(a){function n(c){c=c.match(ba);return null!=c&&1<c.length&&"string"===typeof c[1]&&0<c[1].length?c[1].toLowerCase():null}function E(c){return c.includes(":")?(c=c.split(":"),1E3*(3600*parseInt(c[0])+60*parseInt(c[1])+parseInt(c[2]))):null}function u(c){try{var l=Date.parse(c);isNaN(l)&&(l=null)}catch(G){l=null}if(null==l&&c.includes(" ")){c=c.split(" ");try{l=Date.parse(c[0]),l+=E(c[1]),isNaN(l)&&(l=null)}catch(G){l=null}}return l}function H(){(jQuery("#ai-iab-tcf-bar").length||jQuery(".ai-list-manual").length)&&
+"function"==typeof __tcfapi&&"function"==typeof ai_load_blocks&&"undefined"==typeof ai_iab_tcf_callback_installed&&(__tcfapi("addEventListener",2,function(c,l){l&&"useractioncomplete"===c.eventStatus&&(ai_tcData=c,ai_load_blocks(),jQuery("#ai-iab-tcf-status").text("IAB TCF 2.0 DATA LOADED"),jQuery("#ai-iab-tcf-bar").addClass("status-ok").removeClass("status-error"))}),ai_iab_tcf_callback_installed=!0)}function v(c){c=("; "+document.cookie).split("; "+c+"=");if(2===c.length)return c.pop().split(";").shift()}
+function k(c){if(v(c)){var l=window.location.hostname;v(c)&&(document.cookie=c+"=;path=/"+(l?";domain="+l:"")+";expires=Thu, 01 Jan 1970 00:00:01 GMT");document.cookie=c+"=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;"}}Array.prototype.includes||(Array.prototype.includes=function(c){return!!~this.indexOf(c)});var ba=RegExp(":\\/\\/(.[^/:]+)","i");ai_process_lists=function(c){function l(m,e,d){if(0==m.length){if("!@!"==d)return!0;e!=d&&("true"==d.toLowerCase()?d=!0:"false"==d.toLowerCase()&&(d=
+!1));return e==d}if("object"!=typeof e&&"array"!=typeof e)return!1;var h=m[0];m=m.slice(1);if("*"==h)for(e=$jscomp.makeIterator(Object.entries(e)),h=e.next();!h.done;h=e.next()){if(h=$jscomp.makeIterator(h.value),h.next(),h=h.next().value,l(m,h,d))return!0}else if(h in e)return l(m,e[h],d);return!1}function G(m,e,d){if("object"!=typeof m||-1==e.indexOf("["))return!1;e=e.replace(/]| /gi,"").split("[");return l(e,m,d)}function ca(){"function"==typeof __tcfapi&&(a("#ai-iab-tcf-status").text("IAB TCF 2.0 DETECTED"),
+__tcfapi("getTCData",2,function(m,e){e?(a("#ai-iab-tcf-bar").addClass("status-ok"),"tcloaded"==m.eventStatus||"useractioncomplete"==m.eventStatus?(ai_tcData=m,m.gdprApplies?a("#ai-iab-tcf-status").text("IAB TCF 2.0 DATA LOADED"):jQuery("#ai-iab-tcf-status").text("IAB TCF 2.0 GDPR DOES NOT APPLY"),a("#ai-iab-tcf-bar").addClass("status-ok").removeClass("status-error"),setTimeout(function(){ai_process_lists()},10)):"cmpuishown"==m.eventStatus&&(ai_cmpuishown=!0,a("#ai-iab-tcf-status").text("IAB TCF 2.0 CMP UI SHOWN"),
+a("#ai-iab-tcf-bar").addClass("status-ok").removeClass("status-error"))):(a("#ai-iab-tcf-status").text("IAB TCF 2.0 __tcfapi getTCData failed"),a("#ai-iab-tcf-bar").removeClass("status-ok").addClass("status-error"))}))}function K(m){"function"==typeof __tcfapi?("undefined"==typeof ai_iab_tcf_callback_installed&&H(),"undefined"==typeof ai_tcData_requested&&(ai_tcData_requested=!0,ca(),cookies_need_tcData=!0)):m&&(a("#ai-iab-tcf-bar").addClass("status-error").removeClass("status-ok"),a("#ai-iab-tcf-status").text("IAB TCF 2.0 MISSING: __tcfapi function not found"))}
+c=null==c?a("div.ai-list-data, meta.ai-list-data"):c.filter(".ai-list-data");if(c.length){c.removeClass("ai-list-data");var V=getAllUrlParams(window.location.search);if(null!=V.referrer)var x=V.referrer;else x=document.referrer,""!=x&&(x=n(x));var R=window.navigator.userAgent,S=R.toLowerCase(),W=navigator.language,L=W.toLowerCase();if("undefined"!==typeof MobileDetect)var X=new MobileDetect(R);c.each(function(){var m=document.cookie.split(";");m.forEach(function(A,f){m[f]=A.trim()});var e=a(this).closest("div.code-block"),
+d=!0,h=a(this).attr("referer-list");if("undefined"!=typeof h){h=b64d(h).split(",");var r=a(this).attr("referer-list-type"),I=!1;a.each(h,function(A,f){f=f.trim();if(""==f)return!0;if("*"==f.charAt(0))if("*"==f.charAt(f.length-1)){if(f=f.substr(1,f.length-2),-1!=x.indexOf(f))return I=!0,!1}else{if(f=f.substr(1),x.substr(-f.length)==f)return I=!0,!1}else if("*"==f.charAt(f.length-1)){if(f=f.substr(0,f.length-1),0==x.indexOf(f))return I=!0,!1}else if("#"==f){if(""==x)return I=!0,!1}else if(f==x)return I=
+!0,!1});var p=I;switch(r){case "B":p&&(d=!1);break;case "W":p||(d=!1)}}if(d&&(h=a(this).attr("client-list"),"undefined"!=typeof h&&"undefined"!==typeof X))switch(h=b64d(h).split(","),r=a(this).attr("client-list-type"),p=!1,a.each(h,function(A,f){if(""==f.trim())return!0;var M=f.split("&&");a.each(M,function(da,b){var y=!0,t=!1;b=b.trim();"!!"==b.substring(0,2)&&(y=!1,b=b.substring(2));"language:"==b.substring(0,9)&&(t=!0,b=b.substring(9).toLowerCase());var q=!1;t?"*"==b.charAt(0)?"*"==b.charAt(b.length-
+1)?(b=b.substr(1,b.length-2).toLowerCase(),-1!=L.indexOf(b)&&(q=!0)):(b=b.substr(1).toLowerCase(),L.substr(-b.length)==b&&(q=!0)):"*"==b.charAt(b.length-1)?(b=b.substr(0,b.length-1).toLowerCase(),0==L.indexOf(b)&&(q=!0)):b==L&&(q=!0):"*"==b.charAt(0)?"*"==b.charAt(b.length-1)?(b=b.substr(1,b.length-2).toLowerCase(),-1!=S.indexOf(b)&&(q=!0)):(b=b.substr(1).toLowerCase(),S.substr(-b.length)==b&&(q=!0)):"*"==b.charAt(b.length-1)?(b=b.substr(0,b.length-1).toLowerCase(),0==S.indexOf(b)&&(q=!0)):X.is(b)&&
+(q=!0);p=q?y:!y;if(!p)return!1});if(p)return!1}),r){case "B":p&&(d=!1);break;case "W":p||(d=!1)}var N=h=!1;for(r=1;2>=r;r++)if(d){switch(r){case 1:var g=a(this).attr("cookie-list");break;case 2:g=a(this).attr("parameter-list")}if("undefined"!=typeof g){g=b64d(g);switch(r){case 1:var B=a(this).attr("cookie-list-type");break;case 2:B=a(this).attr("parameter-list-type")}g=g.replace("tcf-gdpr","tcf-v2[gdprApplies]=true");g=g.replace("tcf-no-gdpr","tcf-v2[gdprApplies]=false");g=g.replace("tcf-google",
+"tcf-v2[vendor][consents][755]=true && tcf-v2[purpose][consents][1]=true");g=g.replace("tcf-media.net","tcf-v2[vendor][consents][142]=true && tcf-v2[purpose][consents][1]=true");g=g.replace("tcf-amazon","tcf-v2[vendor][consents][793]=true && tcf-v2[purpose][consents][1]=true");g=g.replace("tcf-ezoic","tcf-v2[vendor][consents][347]=true && tcf-v2[purpose][consents][1]=true");var D=g.split(","),Y=[];m.forEach(function(A){A=A.split("=");try{var f=JSON.parse(decodeURIComponent(A[1]))}catch(M){f=decodeURIComponent(A[1])}Y[A[0]]=
+f});p=!1;var O=a(this);a.each(D,function(A,f){var M=f.split("&&");a.each(M,function(da,b){var y=!0;b=b.trim();"!!"==b.substring(0,2)&&(y=!1,b=b.substring(2));var t=b,q="!@!",Z=-1!=b.indexOf("["),aa=(0==b.indexOf("tcf-v2")||0==b.indexOf("euconsent-v2"))&&-1!=b.indexOf("[");-1!=b.indexOf("=")&&(q=b.split("="),t=q[0],q=q[1],Z=-1!=t.indexOf("["),aa=(0==t.indexOf("tcf-v2")||0==t.indexOf("euconsent-v2"))&&-1!=t.indexOf("["));if(aa)a("#ai-iab-tcf-bar").show(),"object"==typeof ai_tcData?(a("#ai-iab-tcf-bar").addClass("status-ok"),
+t=t.replace(/]| /gi,"").split("["),t.shift(),p=(t=l(t,ai_tcData,q))?y:!y):(O.addClass("ai-list-data"),N=!0,"function"==typeof __tcfapi?K(!1):"undefined"==typeof ai_tcData_retrying&&(ai_tcData_retrying=!0,setTimeout(function(){"function"==typeof __tcfapi?K(!1):setTimeout(function(){"function"==typeof __tcfapi?K(!1):setTimeout(function(){K(!0)},3E3)},1E3)},600)));else if(Z)p=(t=G(Y,t,q))?y:!y;else{var T=!1;"!@!"==q?m.every(function(ea){return ea.split("=")[0]==b?(T=!0,!1):!0}):T=-1!=m.indexOf(b);p=
+T?y:!y}if(!p)return!1});if(p)return!1});p&&(N=!1);switch(B){case "B":p&&(d=!1);break;case "W":p||(d=!1)}}}a(this).hasClass("ai-list-manual")&&(d?(O.removeClass("ai-list-data"),O.removeClass("ai-list-manual")):(h=!0,O.addClass("ai-list-data")));if(d||!h&&!N)if(g=a(this).data("debug-info"),"undefined"!=typeof g&&(g=a("."+g),0!=g.length)){var w=g.parent();w.hasClass("ai-debug-info")&&w.remove()}w=a(this).prevAll(".ai-debug-bar.ai-debug-lists");g=""==x?"#":x;w.find(".ai-debug-name.ai-list-info").text(g).attr("title",
+R+"\n"+W);w.find(".ai-debug-name.ai-list-status").text(d?ai_front.visible:ai_front.hidden);g=!1;if(d&&(r=a(this).attr("scheduling-start"),B=a(this).attr("scheduling-end"),D=a(this).attr("scheduling-days"),"undefined"!=typeof r&&"undefined"!=typeof B&&"undefined"!=typeof D)){g=!0;var z=b64d(r),P=b64d(B),U=parseInt(a(this).attr("scheduling-fallback")),Q=parseInt(a(this).attr("gmt"));z.includes("-")||P.includes("-")?(B=u(z)+Q,r=u(P)+Q):(B=E(z),r=E(P));D=b64d(D).split(",");w=a(this).attr("scheduling-type");
+var C=(new Date).getTime()+Q,F=new Date(C),J=F.getDay();z.includes("-")||P.includes("-")||(z=(new Date(F.getFullYear(),F.getMonth(),F.getDate())).getTime()+Q,C-=z,0>C&&(C+=864E5));0==J?J=6:J--;z=C>=B&&C<r&&D.includes(J.toString());switch(w){case "B":z=!z}z||(d=!1);F=F.toISOString().split(".")[0].replace("T"," ");w=a(this).prevAll(".ai-debug-bar.ai-debug-scheduling");w.find(".ai-debug-name.ai-scheduling-info").text(F+" "+J+" current_time:"+Math.floor(C.toString()/1E3)+"  start_date:"+Math.floor(B/
+1E3).toString()+" ="+(C>=B).toString()+" end_date:"+Math.floor(r/1E3).toString()+" =:"+(C<r).toString()+" days:"+D.toString()+" =:"+D.includes(J.toString()).toString());w.find(".ai-debug-name.ai-scheduling-status").text(d?ai_front.visible:ai_front.hidden);d||0==U||(w.removeClass("ai-debug-scheduling").addClass("ai-debug-fallback"),w.find(".ai-debug-name.ai-scheduling-status").text(ai_front.fallback+" = "+U))}if(h||!d&&N)return!0;a(this).css({visibility:"",position:"",width:"",height:"","z-index":""});
+d?(e.css({visibility:""}),e.hasClass("ai-remove-position")&&e.css({position:""}),"undefined"!=typeof a(this).data("code")&&(d=b64d(a(this).data("code")),0!=a(this).closest("head").length?(a(this).after(d),a(this).remove()):a(this).append(d),ai_process_element_lists(this))):g&&!z&&0!=U?(e.css({visibility:""}),e.hasClass("ai-remove-position")&&e.css({position:""}),a(this).next(".ai-fallback").removeClass("ai-fallback"),"undefined"!=typeof a(this).data("fallback-code")?(d=b64d(a(this).data("fallback-code")),
+a(this).append(d),ai_process_element_lists(this)):(a(this).hide(),e.find(".ai-debug-block").length||-1!=e.attr("style").indexOf("height:")||e.hide()),d=e.attr("data-ai"),"undefined"!==typeof d&&!1!==d&&(d=a(this).attr("fallback-tracking"),"undefined"!==typeof d&&!1!==d&&e.attr("data-ai-"+a(this).attr("fallback_level"),d))):(a(this).hide(),e.length&&(e.removeAttr("data-ai").removeClass("ai-track"),e.find(".ai-debug-block").length?(e.css({visibility:""}).removeClass("ai-close"),e.hasClass("ai-remove-position")&&
+e.css({position:""})):-1==e.attr("style").indexOf("height:")&&e.hide()));a(this).attr("data-code","");a(this).attr("data-fallback-code","");e.removeClass("ai-list-block")})}};a(document).ready(function(c){setTimeout(function(){ai_process_lists();setTimeout(function(){H();if("function"==typeof ai_load_blocks){var l=function(G){"cmplzEnableScripts"!=G.type&&"all"!==G.consentLevel||ai_load_blocks()};jQuery(document).on("cmplzEnableScripts",l);jQuery(document).on("cmplz_event_marketing",l)}},50);jQuery(".ai-debug-page-type").dblclick(function(){jQuery("#ai-iab-tcf-status").text("CONSENT COOKIES");
+jQuery("#ai-iab-tcf-bar").show()});jQuery("#ai-iab-tcf-bar").click(function(){k("euconsent-v2");k("__lxG__consent__v2");k("__lxG__consent__v2_daisybit");k("__lxG__consent__v2_gdaisybit");k("CookieLawInfoConsent");k("cookielawinfo-checkbox-advertisement");k("cookielawinfo-checkbox-analytics");k("cookielawinfo-checkbox-necessary");k("complianz_policy_id");k("complianz_consent_status");k("cmplz_marketing");k("cmplz_consent_status");k("cmplz_preferences");k("cmplz_statistics-anonymous");k("cmplz_choice");
+k("cmplz_banner-status");k("cmplz_functional");k("cmplz_policy_id");k("cmplz_statistics");k("moove_gdpr_popup");k("real_cookie_banner-blog:1-tcf");k("real_cookie_banner-blog:1");jQuery("#ai-iab-tcf-status").text("CONSENT COOKIES DELETED")})},5)})});
+function ai_process_element_lists(a){setTimeout(function(){"function"==typeof ai_process_rotations_in_element&&ai_process_rotations_in_element(a);"function"==typeof ai_process_lists&&ai_process_lists(jQuery(".ai-list-data",a));"function"==typeof ai_process_ip_addresses&&ai_process_ip_addresses(jQuery(".ai-ip-data",a));"function"==typeof ai_process_filter_hooks&&ai_process_filter_hooks(jQuery(".ai-filter-check",a));"function"==typeof ai_adb_process_blocks&&ai_adb_process_blocks(a);"function"==typeof ai_process_impressions&&
+1==ai_tracking_finished&&ai_process_impressions();"function"==typeof ai_install_click_trackers&&1==ai_tracking_finished&&ai_install_click_trackers();"function"==typeof ai_install_close_buttons&&ai_install_close_buttons(document)},5)}
+function getAllUrlParams(a){var n=a?a.split("?")[1]:window.location.search.slice(1);a={};if(n){n=n.split("#")[0];n=n.split("&");for(var E=0;E<n.length;E++){var u=n[E].split("="),H=void 0,v=u[0].replace(/\[\d*\]/,function(k){H=k.slice(1,-1);return""});u="undefined"===typeof u[1]?"":u[1];v=v.toLowerCase();u=u.toLowerCase();a[v]?("string"===typeof a[v]&&(a[v]=[a[v]]),"undefined"===typeof H?a[v].push(u):a[v][H]=u):a[v]=u}}return a};
+ai_run_141716513191 = function(){
+ai_document_write=document.write;document.write=function(a){"interactive"==document.readyState?(console.error("document.write called after page load: ",a),"undefined"!=typeof ai_js_errors&&ai_js_errors.push(["document.write called after page load",a,0])):ai_document_write.call(document,a)};
+ai_insert_viewport_code ('ai-insert-10-12372032');
+ai_insert_viewport_code ('ai-insert-9-91443400');
+};
+if (document.readyState === 'complete' || (document.readyState !== 'loading' && !document.documentElement.doScroll)) ai_run_141716513191 (); else document.addEventListener ('DOMContentLoaded', ai_run_141716513191);
+ai_js_code = true;
+}
+function ai_wait_for_jquery(){function b(f,c){var a=document.createElement("script");a.src=f;var d=document.getElementsByTagName("head")[0],e=!1;a.onload=a.onreadystatechange=function(){e||this.readyState&&"loaded"!=this.readyState&&"complete"!=this.readyState||(e=!0,c&&c(),a.onload=a.onreadystatechange=null,d.removeChild(a))};d.appendChild(a)}window.jQuery&&window.jQuery.fn?ai_run_scripts():(ai_jquery_waiting_counter++,4==ai_jquery_waiting_counter&&b("https://popugai.info/wp-includes/js/jquery/jquery.min.js?ver=1.10.2",function(){b("https://popugai.info/wp-includes/js/jquery/jquery-migrate.min.js?ver=5.8.3",
+null)}),30>ai_jquery_waiting_counter&&setTimeout(function(){ai_wait_for_jquery()},50))}ai_jquery_waiting_counter=0;ai_wait_for_jquery();
+
+</script>
+<script>window.lazyLoadOptions={elements_selector:"img[data-lazy-src],.rocket-lazyload,iframe[data-lazy-src]",data_src:"lazy-src",data_srcset:"lazy-srcset",data_sizes:"lazy-sizes",class_loading:"lazyloading",class_loaded:"lazyloaded",threshold:300,callback_loaded:function(element){if(element.tagName==="IFRAME"&&element.dataset.rocketLazyload=="fitvidscompatible"){if(element.classList.contains("lazyloaded")){if(typeof window.jQuery!="undefined"){if(jQuery.fn.fitVids){jQuery(element).parent().fitVids()}}}}}};window.addEventListener('LazyLoad::Initialized',function(e){var lazyLoadInstance=e.detail.instance;if(window.MutationObserver){var observer=new MutationObserver(function(mutations){var image_count=0;var iframe_count=0;var rocketlazy_count=0;mutations.forEach(function(mutation){for(var i=0;i<mutation.addedNodes.length;i++){if(typeof mutation.addedNodes[i].getElementsByTagName!=='function'){continue}
+if(typeof mutation.addedNodes[i].getElementsByClassName!=='function'){continue}
+images=mutation.addedNodes[i].getElementsByTagName('img');is_image=mutation.addedNodes[i].tagName=="IMG";iframes=mutation.addedNodes[i].getElementsByTagName('iframe');is_iframe=mutation.addedNodes[i].tagName=="IFRAME";rocket_lazy=mutation.addedNodes[i].getElementsByClassName('rocket-lazyload');image_count+=images.length;iframe_count+=iframes.length;rocketlazy_count+=rocket_lazy.length;if(is_image){image_count+=1}
+if(is_iframe){iframe_count+=1}}});if(image_count>0||iframe_count>0||rocketlazy_count>0){lazyLoadInstance.update()}});var b=document.getElementsByTagName("body")[0];var config={childList:!0,subtree:!0};observer.observe(b,config)}},!1)</script><script data-no-minify="1" async src="https://popugai.info/wp-content/plugins/wp-rocket/assets/js/lazyload/17.5/lazyload.min.js"></script><script>function lazyLoadThumb(e){var t='<img data-lazy-src="https://i.ytimg.com/vi/ID/hqdefault.jpg" alt="" width="480" height="360"><noscript><img src="https://i.ytimg.com/vi/ID/hqdefault.jpg" alt="" width="480" height="360"></noscript>',a='<button class="play" aria-label="play Youtube video"></button>';return t.replace("ID",e)+a}function lazyLoadYoutubeIframe(){var e=document.createElement("iframe"),t="ID?autoplay=1";t+=0===this.parentNode.dataset.query.length?'':'&'+this.parentNode.dataset.query;e.setAttribute("src",t.replace("ID",this.parentNode.dataset.src)),e.setAttribute("frameborder","0"),e.setAttribute("allowfullscreen","1"),e.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"),this.parentNode.parentNode.replaceChild(e,this.parentNode)}document.addEventListener("DOMContentLoaded",function(){var e,t,p,a=document.getElementsByClassName("rll-youtube-player");for(t=0;t<a.length;t++)e=document.createElement("div"),e.setAttribute("data-id",a[t].dataset.id),e.setAttribute("data-query", a[t].dataset.query),e.setAttribute("data-src", a[t].dataset.src),e.innerHTML=lazyLoadThumb(a[t].dataset.id),a[t].appendChild(e),p=e.querySelector('.play'),p.onclick=lazyLoadYoutubeIframe});</script></body>
+
+</html>
+<!-- This website is like a Rocket, isn't it? Performance optimized by WP Rocket. Learn more: https://wp-rocket.me - Debug: cached@1642958548 -->
